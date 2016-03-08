@@ -13,4 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="endPoint">http://54.186.152.100/80</string>
+    <string name="authorizationToken">94213A6A-72A0-41F9-9084-AD615378CEC7</string>
+
 </resources>
