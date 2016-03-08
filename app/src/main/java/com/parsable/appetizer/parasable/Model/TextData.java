@@ -1,5 +1,4 @@
 package com.parsable.appetizer.parasable.Model;
-import com.parsable.appetizer.parasable.Enum;
 import io.realm.RealmObject;
 import io.realm.annotations.Required;
 
@@ -11,6 +10,21 @@ public class TextData extends RealmObject{
 
     @Required
     private String data;
-    private Enum.callBackResult result;
+    private String result;
 
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 }

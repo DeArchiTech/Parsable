@@ -14,4 +14,8 @@ interface IRepository {
 
     fun getNumData(errored : Boolean): Observable<List<NumData>>
 
+    fun saveTextData(data : TextData): Observable<TextData>
+
+    fun saveNumData(data : NumData): Observable<NumData>
+
 }
