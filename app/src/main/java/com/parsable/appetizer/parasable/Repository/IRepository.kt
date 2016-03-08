@@ -10,12 +10,12 @@ import rx.Observable
 
 interface IRepository {
 
-    fun getTextData(errored: Boolean): Observable<List<TextData>>
+    fun readTextData(errored: Boolean): Observable<List<TextData>>
 
-    fun getNumData(errored : Boolean): Observable<List<NumData>>
+    fun readNumData(errored : Boolean): Observable<List<NumData>>
 
-    fun saveTextData(data : TextData): Observable<TextData>
+    fun createTextData(data : TextData): Observable<TextData>
 
-    fun saveNumData(data : NumData): Observable<NumData>
+    fun createNumData(data : NumData): Observable<NumData>
 
 }

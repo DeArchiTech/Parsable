@@ -5,8 +5,6 @@ import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import io.realm.Realm;
@@ -36,7 +34,7 @@ public class RepositoryImpl implements IRepository {
 
     @NotNull
     @Override
-    public Observable<TextData> saveTextData(@NotNull final TextData data) {
+    public Observable<TextData> createTextData(@NotNull final TextData data) {
 
         Observable<TextData> observable = Observable.create(
 
@@ -71,7 +69,7 @@ public class RepositoryImpl implements IRepository {
 
     @NotNull
     @Override
-    public Observable<List<TextData>> getTextData(final boolean errored) {
+    public Observable<List<TextData>> readTextData(final boolean errored) {
 
         Observable<List<TextData>> observable = Observable.create(
 
@@ -107,14 +105,14 @@ public class RepositoryImpl implements IRepository {
 
     @NotNull
     @Override
-    public Observable<List<NumData>> getNumData(boolean errored) {
+    public Observable<List<NumData>> readNumData(boolean errored) {
         return null;
     }
 
 
     @NotNull
     @Override
-    public Observable<NumData> saveNumData(@NotNull NumData data) {
+    public Observable<NumData> createNumData(@NotNull NumData data) {
         return null;
     }
 }
