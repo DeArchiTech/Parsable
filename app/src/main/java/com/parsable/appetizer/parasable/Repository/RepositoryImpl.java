@@ -57,13 +57,14 @@ public class RepositoryImpl implements IRepository {
         observable.observeOn(AndroidSchedulers.mainThread());
         observable.subscribe();
         return observable;
+
     }
 
     @NotNull
     @Override
-    public Observable<RealmResults<TextData>> readTextData(final boolean errored) {
+    public Observable<RealmResults<TextData>> readTextData(@NotNull ParsableEnum.callBackResult result) {
 
-        String errorValue = ParsableEnum.callBackResult.ERROR.name();
+        String errorValue = result.name();
         String columnName = "result";
 
         return realm
@@ -76,16 +77,45 @@ public class RepositoryImpl implements IRepository {
 
     @NotNull
     @Override
-    public Observable<NumData> createNumData(@NotNull NumData data) {
-        return null;
+    public Observable<NumData> createNumData(@NotNull final NumData data) {
+
+        Observable<NumData> observable = Observable.create(
+
+                new Observable.OnSubscribe<NumData>() {
+
+                    @Override
+                    public void call(final Subscriber<? super NumData> subscriber) {
+
+                        realm.beginTransaction();
+                        realm.copyToRealm(data);
+                        realm.commitTransaction();
+
+                        subscriber.onNext(data);
+                        subscriber.onCompleted();
+                    }
+
+                });
+
+        observable.subscribeOn(Schedulers.io());
+        observable.observeOn(AndroidSchedulers.mainThread());
+        observable.subscribe();
+        return observable;
+
     }
 
     @NotNull
     @Override
-    public Observable<List<NumData>> readNumData(boolean errored) {
-        return null;
-    }
+    public Observable<RealmResults<NumData>> readNumData(@NotNull ParsableEnum.callBackResult result) {
 
+        String errorValue = result.name();
+        String columnName = "result";
+
+        return realm
+                .where(NumData.class)
+                .equalTo(columnName, errorValue)
+                .findAllAsync()
+                .asObservable();
+    }
 
 
 }
