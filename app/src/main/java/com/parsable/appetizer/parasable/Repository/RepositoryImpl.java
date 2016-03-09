@@ -1,5 +1,7 @@
 package com.parsable.appetizer.parasable.Repository;
 
+import android.os.Looper;
+
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
@@ -8,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import rx.Observable;
@@ -64,14 +67,37 @@ public class RepositoryImpl implements IRepository {
     @Override
     public Observable<RealmResults<TextData>> readTextData(@NotNull ParsableEnum.callBackResult result) {
 
-        String errorValue = result.name();
-        String columnName = "result";
+        final String errorValue = result.name();
+        final String columnName = "result";
+        final Observable<RealmResults<TextData>> observable = Observable.empty();
 
-        return realm
-                .where(TextData.class)
-                .equalTo(columnName, errorValue)
-                .findAllAsync()
-                .asObservable();
+        RealmAsyncTask transaction = realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+
+                RealmResults<TextData> dataResult = bgRealm
+                        .where(TextData.class)
+                        .equalTo(columnName, errorValue)
+                        .findAllAsync();
+                observable.just(dataResult);
+
+            }
+        }, new Realm.Transaction.Callback() {
+            @Override
+            public void onSuccess() {
+
+                observable.subscribeOn(Schedulers.io());
+                observable.observeOn(AndroidSchedulers.mainThread());
+                observable.subscribe();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // transaction is automatically rolled-back, do any cleanup here
+            }
+        });
+
+        return observable;
 
     }
 

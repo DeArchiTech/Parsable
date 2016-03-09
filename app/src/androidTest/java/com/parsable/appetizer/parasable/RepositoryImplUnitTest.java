@@ -15,6 +15,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -41,74 +43,115 @@ public class RepositoryImplUnitTest{
     public void setUp(){
 
         //Set UP
-        Context context = InstrumentationRegistry.getTargetContext();
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
-                .name("myrealm.realm")
-                .inMemory()
-                .build();
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                Context context = InstrumentationRegistry.getTargetContext();
+                RealmConfiguration realmConfig = new RealmConfiguration.Builder(context)
+                        .name("myrealm.realm")
+                        .inMemory()
+                        .build();
 
-        this.realm = Realm.getInstance(realmConfig);
-        this.repository = new RepositoryImpl(realmConfig, realm);
+                RepositoryImplUnitTest.this.realm = Realm.getInstance(realmConfig);
+                RepositoryImplUnitTest.this.repository = new RepositoryImpl(realmConfig, realm);
+            }
+        });
 
     }
 
     @Test
     public void testCreateTextData(){
 
-        //Test Algorithm
-        //1)Create Object
-        TextData data = new TextData();
-        data.setData("testData");
-        data.setResult(ParsableEnum.callBackResult.ERROR.name());
-        //2)Save Object To Realm
-        Observable<TextData> observable = this.repository.createTextData(data);
-        //3)Assert
-        TestSubscriber<TextData> subscriber = new TestSubscriber<TextData>();
-        observable.subscribe(subscriber);
+        //Run on the same thread that has looper
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
 
-        subscriber.assertCompleted();
-        subscriber.assertNoErrors();
-        subscriber.assertReceivedOnNext(Arrays.asList(data));
+                //Test Algorithm
+                //1)Create Object
+                TextData data = new TextData();
+                data.setData("testData");
+                data.setResult(ParsableEnum.callBackResult.ERROR.name());
+                //2)Save Object To Realm
+                Observable<TextData> observable = RepositoryImplUnitTest.this.repository.createTextData(data);
+                //3)Assert
+                TestSubscriber<TextData> subscriber = new TestSubscriber<TextData>();
+                observable.subscribe(subscriber);
+
+                subscriber.assertCompleted();
+                subscriber.assertNoErrors();
+                subscriber.assertReceivedOnNext(Arrays.asList(data));
+
+            }
+        });
 
     }
 
     @Test
     public void testReadTextData(){
 
-        //Test Algorithm
-        //1)Create Object
-        this.realm.beginTransaction();
-        TextData data = this.realm.createObject(TextData.class);
-        data.setData(UUID.randomUUID().toString());
-        data.setResult(ParsableEnum.callBackResult.ERROR.name());
+        //Run on the same thread that has looper
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
 
-        //2)Save object To realm
-        this.realm.commitTransaction();
+                //Test Algorithm
+                //1)Create Object
+                RepositoryImplUnitTest.this.realm.beginTransaction();
+                TextData data = RepositoryImplUnitTest.this.realm.createObject(TextData.class);
+                data.setData(UUID.randomUUID().toString());
+                data.setResult(ParsableEnum.callBackResult.ERROR.name());
 
-        //3)Retrieve object from realm
-        Observable<RealmResults<TextData>> observable = this.repository.readTextData(false);
+                //2)Save object To realm
+                RepositoryImplUnitTest.this.realm.commitTransaction();
 
-        //4)Assert Observable holds the same object
-        assert (false);
+                //3)Retrieve object from realm
+                Observable<RealmResults<TextData>> observable
+                        = RepositoryImplUnitTest.this.repository.readTextData(ParsableEnum.callBackResult.ERROR);
+
+                //4)Assert No Error
+                TestSubscriber<RealmResults<TextData>> subscriber = new TestSubscriber<RealmResults<TextData>>();
+                observable.subscribe(subscriber);
+                subscriber.assertCompleted();
+                subscriber.assertNoErrors();
+
+                //5)Assert whats in the observable is what our desired result is supposed to be
+            }
+        });
 
     }
 
     @Test
     public void testCreateNumdata(){
 
-        //Test Algorithm
-        //1)Create Object
-        //2)Save Object To Realm
-        //3)Read Object From Realm
-        //4)Close Connection
-        assert (false);
+        //Run on the same thread that has looper
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
 
+                //Test Algorithm
+                //1)Create Object
+                //2)Save Object To Realm
+                //3)Read Object From Realm
+                //4)Close Connection
+                assert (false);
+
+            }
+        });
     }
 
     @Test
     public void testReadNumdata(){
 
-        assert (false);
+        //Run on the same thread that has looper
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+
+                assert (false);
+
+            }
+        });
 
     }
 
