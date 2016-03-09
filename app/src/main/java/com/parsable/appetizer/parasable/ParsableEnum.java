@@ -3,7 +3,7 @@ package com.parsable.appetizer.parasable;
 /**
  * Created by Davix on 3/8/16.
  */
-public class Enum {
+public class ParsableEnum {
 
     public enum callBackResult { ERROR , SUCCESS}
 

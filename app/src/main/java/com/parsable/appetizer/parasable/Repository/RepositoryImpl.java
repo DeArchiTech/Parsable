@@ -1,6 +1,6 @@
 package com.parsable.appetizer.parasable.Repository;
 
-import com.parsable.appetizer.parasable.Enum;
+import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
 
@@ -43,20 +43,12 @@ public class RepositoryImpl implements IRepository {
                     @Override
                     public void call(final Subscriber<? super TextData> subscriber) {
 
-                        realm.executeTransaction(new Realm.Transaction() {
+                        realm.beginTransaction();
+                        realm.copyToRealm(data);
+                        realm.commitTransaction();
 
-                            @Override
-                            public void execute(Realm bgRealm) {
-
-                                realm.beginTransaction();
-                                realm.copyToRealm(data);
-                                realm.commitTransaction();
-
-                                subscriber.onNext(data);
-                                subscriber.onCompleted();
-
-                            }
-                        });
+                        subscriber.onNext(data);
+                        subscriber.onCompleted();
                     }
 
                 });
@@ -69,38 +61,23 @@ public class RepositoryImpl implements IRepository {
 
     @NotNull
     @Override
-    public Observable<List<TextData>> readTextData(final boolean errored) {
+    public Observable<RealmResults<TextData>> readTextData(final boolean errored) {
 
-        Observable<List<TextData>> observable = Observable.create(
+        String errorValue = ParsableEnum.callBackResult.ERROR.name();
+        String columnName = "result";
 
-                new Observable.OnSubscribe<List<TextData>>() {
+        return realm
+                .where(TextData.class)
+                .equalTo(columnName, errorValue)
+                .findAllAsync()
+                .asObservable();
 
-                    @Override
-                    public void call(final Subscriber<? super List<TextData>> subscriber) {
+    }
 
-                        realm.executeTransaction(new Realm.Transaction() {
-
-                            @Override
-                            public void execute(Realm bgRealm) {
-
-                                String errorValue = Enum.callBackResult.ERROR.name();
-                                String columnName = "result";
-                                RealmResults<TextData> result = bgRealm
-                                        .where(TextData.class).equalTo(columnName, errorValue).findAll();
-
-                                subscriber.onNext(result);
-                                subscriber.onCompleted();
-
-                            }
-                        });
-                    }
-
-                });
-
-        observable.subscribeOn(Schedulers.io());
-        observable.observeOn(AndroidSchedulers.mainThread());
-        observable.subscribe();
-        return observable;
+    @NotNull
+    @Override
+    public Observable<NumData> createNumData(@NotNull NumData data) {
+        return null;
     }
 
     @NotNull
@@ -110,9 +87,5 @@ public class RepositoryImpl implements IRepository {
     }
 
 
-    @NotNull
-    @Override
-    public Observable<NumData> createNumData(@NotNull NumData data) {
-        return null;
-    }
+
 }

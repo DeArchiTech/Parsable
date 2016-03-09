@@ -2,6 +2,8 @@ package com.parsable.appetizer.parasable.Repository
 
 import com.parsable.appetizer.parasable.Model.NumData
 import com.parsable.appetizer.parasable.Model.TextData
+import com.parsable.appetizer.parasable.ParsableEnum
+import io.realm.RealmResults
 import rx.Observable
 
 /**
@@ -10,9 +12,9 @@ import rx.Observable
 
 interface IRepository {
 
-    fun readTextData(errored: Boolean): Observable<List<TextData>>
+    fun readTextData(result: ParsableEnum.callBackResult): Observable<RealmResults<TextData>>
 
-    fun readNumData(errored : Boolean): Observable<List<NumData>>
+    fun readNumData(result: ParsableEnum.callBackResult): Observable<RealmResults<NumData>>
 
     fun createTextData(data : TextData): Observable<TextData>
 

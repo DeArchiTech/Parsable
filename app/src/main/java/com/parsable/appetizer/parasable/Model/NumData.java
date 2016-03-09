@@ -1,6 +1,5 @@
 package com.parsable.appetizer.parasable.Model;
 
-import com.parsable.appetizer.parasable.Enum;
 import io.realm.RealmObject;
 
 /**
