@@ -133,14 +133,37 @@ public class RepositoryImpl implements IRepository {
     @Override
     public Observable<RealmResults<NumData>> readNumData(@NotNull ParsableEnum.callBackResult result) {
 
-        String errorValue = result.name();
-        String columnName = "result";
+        final String errorValue = result.name();
+        final String columnName = "result";
+        final Observable<RealmResults<NumData>> observable = Observable.empty();
 
-        return realm
-                .where(NumData.class)
-                .equalTo(columnName, errorValue)
-                .findAllAsync()
-                .asObservable();
+        RealmAsyncTask transaction = realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+
+                RealmResults<NumData> dataResult = bgRealm
+                        .where(NumData.class)
+                        .equalTo(columnName, errorValue)
+                        .findAllAsync();
+                observable.just(dataResult);
+
+            }
+        }, new Realm.Transaction.Callback() {
+            @Override
+            public void onSuccess() {
+
+                observable.subscribeOn(Schedulers.io());
+                observable.observeOn(AndroidSchedulers.mainThread());
+                observable.subscribe();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // transaction is automatically rolled-back, do any cleanup here
+            }
+        });
+
+        return observable;
     }
 
 

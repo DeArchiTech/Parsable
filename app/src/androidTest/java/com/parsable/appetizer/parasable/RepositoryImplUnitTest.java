@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
@@ -116,6 +118,7 @@ public class RepositoryImplUnitTest{
                 subscriber.assertNoErrors();
 
                 //5)Assert whats in the observable is what our desired result is supposed to be
+                //TODO
             }
         });
 
@@ -131,10 +134,18 @@ public class RepositoryImplUnitTest{
 
                 //Test Algorithm
                 //1)Create Object
+                NumData data = new NumData();
+                data.setData(3);
+                data.setResult(ParsableEnum.callBackResult.ERROR.name());
+
                 //2)Save Object To Realm
-                //3)Read Object From Realm
-                //4)Close Connection
-                assert (false);
+                Observable<NumData> observable = RepositoryImplUnitTest.this.repository.createNumData(data);
+                //3)Assert
+                TestSubscriber<NumData> subscriber = new TestSubscriber<NumData>();
+                observable.subscribe(subscriber);
+                subscriber.assertCompleted();
+                subscriber.assertNoErrors();
+                subscriber.assertReceivedOnNext(Arrays.asList(data));
 
             }
         });
@@ -148,7 +159,28 @@ public class RepositoryImplUnitTest{
             @Override
             public void run() {
 
-                assert (false);
+                //Test Algorithm
+                //1)Create Object
+                RepositoryImplUnitTest.this.realm.beginTransaction();
+                NumData data = RepositoryImplUnitTest.this.realm.createObject(NumData.class);
+                data.setData(1.0);
+                data.setResult(ParsableEnum.callBackResult.ERROR.name());
+
+                //2)Save object To realm
+                RepositoryImplUnitTest.this.realm.commitTransaction();
+
+                //3)Retrieve object from realm
+                Observable<RealmResults<NumData>> observable
+                        = RepositoryImplUnitTest.this.repository.readNumData(ParsableEnum.callBackResult.ERROR);
+
+                //4)Assert No Error
+                TestSubscriber<RealmResults<NumData>> subscriber = new TestSubscriber<RealmResults<NumData>>();
+                observable.subscribe(subscriber);
+                subscriber.assertCompleted();
+                subscriber.assertNoErrors();
+
+                //5)Assert whats in the observable is what our desired result
+                //TODO
 
             }
         });
