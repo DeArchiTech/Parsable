@@ -24,3 +24,15 @@
 -keep @io.realm.internal.Keep class * { *; }
 -dontwarn javax.**
 -dontwarn io.realm.**
+
+#Retro Fit
+
+-keepattributes *Annotation*
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * {
+@retrofit.http.* <methods>; }
+-keepattributes Signature
+-keepattributes Exceptions
+
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
