@@ -47,7 +47,16 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     //Unit test
-    testCompile "org.robolectric:robolectric:3.0"
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'com.squareup.okhttp3:okhttp:3.2.0'
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.2.0'
+    testCompile 'org.mockito:mockito-all:1.9.5'
+    testCompile 'org.easymock:easymock:3.4'
+    testCompile 'org.easymock:easymockclassextension:3.2'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.4'
+    testCompile 'org.powermock:powermock-api-easymock:1.6.4'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.3'
+    testCompile 'org.powermock:powermock-core:1.6.4'
 
     //Instrumental Test
     androidTestCompile 'junit:junit:4.12'
