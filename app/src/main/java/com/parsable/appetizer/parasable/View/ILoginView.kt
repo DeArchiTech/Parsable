@@ -1,5 +1,7 @@
 package com.parsable.appetizer.parasable.View
 
+import com.parsable.appetizer.parasable.ParsableEnum
+
 /**
  * Created by Davix on 3/10/16.
  */
@@ -7,6 +9,6 @@ package com.parsable.appetizer.parasable.View
 //By the signUp or when the Login buttons
 interface ILoginView{
 
-    fun displayActionAndResult(action: String, result : Boolean)
+    fun displayActionAndResult(action: ParsableEnum.actionName, result : Boolean)
 
 }

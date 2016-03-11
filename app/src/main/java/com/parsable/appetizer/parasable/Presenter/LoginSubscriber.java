@@ -26,13 +26,13 @@ public class LoginSubscriber<T> extends Subscriber<T> {
     @Override
     public void onError(Throwable e) {
 
-        this.view.displayActionAndResult(this.action.name(), false);
+        this.view.displayActionAndResult(this.action, false);
     }
 
     @Override
     public void onNext(T t) {
 
-        this.view.displayActionAndResult(this.action.name(), true );
+        this.view.displayActionAndResult(this.action, true );
 
     }
 }

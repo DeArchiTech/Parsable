@@ -35,6 +35,7 @@ import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
+import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
 import com.parsable.appetizer.parasable.R;
@@ -101,22 +102,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     @Override
-    public void displayActionAndResult(String action, boolean result){
+    public void displayActionAndResult(ParsableEnum.actionName action, boolean result){
 
         if(result){
 
-            this.displaySuccessMessage(action);
+            this.displaySuccessMessage(action.name());
 
         }else{
 
-            this.displayError(action);
+            this.displayError(action.name());
         }
 
     }
 
     private void displayError(String action) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setMessage(action + getString(R.string.displayErrorTitlePostfix))
                 .setPositiveButton(action + getString(R.string.displayErrorMessagePostfix), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -132,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void displaySuccessMessage(@NotNull String action) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setMessage(action)
                 .setPositiveButton(getString(R.string.displaySuccessButton), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

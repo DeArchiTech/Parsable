@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public class MockLoginView implements ILoginView {
 
     @Override
-    public void displayActionAndResult(@NotNull String action, boolean result) {
+    public void displayActionAndResult(@NotNull ParsableEnum.actionName action, boolean result) {
 
     }
+
 }
