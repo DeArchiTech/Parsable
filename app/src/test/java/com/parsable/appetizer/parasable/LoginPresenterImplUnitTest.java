@@ -7,8 +7,10 @@ import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
+import com.parsable.appetizer.parasable.Presenter.LoginSubscriber;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.View.ILoginView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import org.robolectric.annotation.Config;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.Subscriber;
 import rx.observers.TestSubscriber;
 
 /**
@@ -29,6 +32,7 @@ public class LoginPresenterImplUnitTest {
 
     ILoginPresenter presenter;
     IRepository repository;
+    ILoginView view;
     String email;
     String password;
     String loginEmail;
@@ -36,8 +40,9 @@ public class LoginPresenterImplUnitTest {
     @Before
     public void setUp(){
 
+        this.view = new MockLoginView();
         this.repository = new RepositoryImpl(new MockWebApiService());
-        this.presenter = new LoginPresenterImpl(repository);
+        this.presenter = new LoginPresenterImpl(this.repository, this.view);
         this.email = new StringHelper().generateEmail();
         this.loginEmail = new StringHelper().generateLoginEmail();
         this.password = new StringHelper().generatePassword();
@@ -47,49 +52,27 @@ public class LoginPresenterImplUnitTest {
     public void logoutActionTest(){
 
         //1)Get Observable and subscriber
-        Observable<ResponseBody> observable = this.presenter.logOutAction();
-        TestSubscriber<ResponseBody> subscriber = new TestSubscriber<ResponseBody>();
-        observable.subscribe(subscriber);
-
-        //2)Assert Subscriber
-        subscriber.assertCompleted();
-        subscriber.assertNoErrors();
-        assert( null != subscriber.getOnNextEvents().get(0));
-
+        Subscriber<ResponseBody> subscriber = this.presenter.logOutAction();
+        assert (subscriber!=null);
+        //Todo Write Logic To Test Subscribers
     }
 
     @Test
     public void loginActionTest(){
 
-        //1)Mock Login Event
-        LoginEvent event = new LoginEvent(this.loginEmail, this.password);
-
-        //2)Get Observable and subscriber
-        Observable<AuthToken> observable = this.presenter.loginAction(event);
-        TestSubscriber<AuthToken> subscriber = new TestSubscriber<AuthToken>();
-        observable.subscribe(subscriber);
-
-        //3)Assert Subscriber
-        subscriber.assertCompleted();
-        subscriber.assertNoErrors();
-        assert( null != subscriber.getOnNextEvents().get(0));
+        //1)Get Observable and subscriber
+        LoginEvent event = new LoginEvent(this.email , this.password);
+        Subscriber<AuthToken> subscriber = this.presenter.loginAction(event);
+        assert (subscriber!=null);
     }
 
     @Test
     public void signUpActionTest(){
 
-        //1)Mock SignUp Event
-        CreateAccountEvent event = new CreateAccountEvent(this.email, this.password);
-
-        //2)Get Observable and subscriber
-        Observable<ResponseBody> observable = this.presenter.createAccountAction(event);
-        TestSubscriber<ResponseBody> subscriber = new TestSubscriber<ResponseBody>();
-        observable.subscribe(subscriber);
-
-        //3)Assert Subscriber
-        subscriber.assertCompleted();
-        subscriber.assertNoErrors();
-        assert( null != subscriber.getOnNextEvents().get(0));
+        //1)Get Observable and subscriber
+        CreateAccountEvent event = new CreateAccountEvent(this.email , this.password);
+        Subscriber<ResponseBody> subscriber = this.presenter.createAccountAction(event);
+        assert (subscriber!=null);
 
     }
 

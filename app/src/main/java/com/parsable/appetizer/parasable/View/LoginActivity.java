@@ -29,7 +29,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
+import com.parsable.appetizer.parasable.Event.LoginEvent;
+import com.parsable.appetizer.parasable.Network.RetrofitHelper;
+import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
+import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
 import com.parsable.appetizer.parasable.R;
+import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.View.Controller.ILoginController;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +48,73 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> , ILoginView, ILoginController {
+
+    private ILoginPresenter presenter;
+    //Textview to hold Email and Password Fields
+
+    public ILoginPresenter getPresenter() {
+
+        if(presenter == null){
+            presenter = new LoginPresenterImpl(
+                    new RepositoryImpl(
+                            new RetrofitHelper().buildWebApiService()),this);
+        }
+        return presenter;
+
+    }
+
+    @Override
+    public void loginButtonPressed() {
+
+        if(inputIsValid()){
+            LoginEvent event = null;
+            getPresenter().loginAction(event);
+        }else{
+            displayError();
+        }
+
+    }
+
+    @Override
+    public void logoutButtonPressed() {
+
+        getPresenter().logOutAction();
+
+    }
+
+    @Override
+    public void createAccountButtonPressed() {
+
+        if(inputIsValid()){
+            CreateAccountEvent event = null;
+            getPresenter().createAccountAction(event);
+        }else{
+            displayError();
+        }
+    }
+
+    @Override
+    public void displayError() {
+
+        //Todo Implement
+    }
+
+    @Override
+    public void displaySuccessMessage(@NotNull String action) {
+
+        //Todo Implement
+
+    }
+
+    private boolean inputIsValid(){
+
+        return true;
+
+    }
+
+    //Generated Android Code
+
 
     /**
      * Id to identity READ_CONTACTS permission request.
