@@ -2,7 +2,9 @@ package com.parsable.appetizer.parasable.Presenter;
 
 import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Repository.IDataStore;
+import com.parsable.appetizer.parasable.Repository.IRepository;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,27 +16,30 @@ import rx.Observable;
  */
 public class LoginPresenterImpl implements ILoginPresenter{
 
-    IDataStore repository;
+    IRepository repository;
 
-    public LoginPresenterImpl(IDataStore repository) {
+    public LoginPresenterImpl(IRepository repository) {
         this.repository = repository;
     }
 
     @NotNull
     @Override
-    public Observable<ResponseBody> loginAction(@NotNull LoginEvent event) {
-        return null;
+    public Observable<AuthToken> loginAction(@NotNull LoginEvent event) {
+
+        return this.repository.loginAction(event);
+
     }
 
     @NotNull
     @Override
-    public Observable<ResponseBody> signUpAction(@NotNull CreateAccountEvent event) {
-        return null;
+    public Observable<ResponseBody> createAccountAction(@NotNull CreateAccountEvent event) {
+        return this.repository.createAccountAction(event);
     }
 
     @NotNull
     @Override
     public Observable<ResponseBody> logOutAction() {
-        return null;
+        return this.repository.logOut();
     }
+
 }

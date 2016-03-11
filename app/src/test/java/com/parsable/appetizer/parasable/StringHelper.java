@@ -16,4 +16,13 @@ public class StringHelper {
         return sb.toString();
     }
 
+    public String generateLoginEmail(){
+
+        return "david@parsable.com";
+    }
+
+    public String generatePassword(){
+
+        return "parsable";
+    }
 }
