@@ -19,7 +19,7 @@ import okhttp3.Response;
  */
 public class ParsableInterceptor implements Interceptor{
 
-    private Map<String, String> headerMap = new HashMap<String,String>();
+    private Map<String, String> headerMap;
 
     public ParsableInterceptor() {
         this.headerMap = new HashMap<String, String>();
@@ -29,10 +29,11 @@ public class ParsableInterceptor implements Interceptor{
     public ParsableInterceptor(AuthToken token){
 
         this.headerMap = new HashMap<String, String>();
-        this.headerMap.put("Content-Type", "application/json");
         if(token!=null){
             this.headerMap.put("Authorization" , "Token " + token.AuthToken);
         }
+        this.headerMap.put("Content-Type", "application/json");
+
     }
 
     @Override
@@ -46,18 +47,8 @@ public class ParsableInterceptor implements Interceptor{
             builder.addHeader(entry.getKey(), entry.getValue());
         }
 
-        builder.build();
+        request = builder.build();
         Response response = chain.proceed(request);
         return response;
     }
-
-    public boolean addHeader(String key , String value){
-
-        if(this.headerMap!=null){
-            this.headerMap.put(key,value);
-            return true;
-        }
-        return false;
-    }
-
 }
