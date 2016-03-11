@@ -51,4 +51,32 @@ public class RepositoryUnitTest {
         assert (subscriber.getOnNextEvents().get(0) != null);
 
     }
+
+    @Test
+    public void loginActionTest(){
+
+        assert(false);
+
+    }
+
+    @Test
+    public void logOutActionTest(){
+
+        assert(false);
+
+    }
+
+    @Test
+    public void sendTextActionTest(){
+
+        assert(false);
+
+    }
+
+    @Test
+    public void sendNumberActionTest(){
+
+        assert(false);
+
+    }
 }

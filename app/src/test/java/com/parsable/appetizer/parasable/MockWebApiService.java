@@ -25,21 +25,23 @@ public class MockWebApiService implements IWebApiService{
 
     @Override
     public Observable<AuthToken> loginAccount(@Body LoginApiPojo pojo) {
-        return null;
+        return Observable.just(new AuthToken());
     }
 
     @Override
     public Observable<ResponseBody> logoutAccount(@Body LogOutApiPojo pojo) {
-        return null;
+
+        return Observable.just(ResponseBody.create(MediaType.parse(""), ""));
     }
 
     @Override
     public Observable<ResponseBody> sendText(@Body SendTextApiPojo pojo) {
-        return null;
+        return Observable.just(ResponseBody.create(MediaType.parse(""), ""));
     }
 
     @Override
-    public Observable<ResponseBody> sendNumber(@Body SendNumberApiPojo pojo) {
-        return null;
+    public Observable<ResponseBody> sendNumber(@Body SendNumberApiPojo pojo){
+        return Observable.just(ResponseBody.create(MediaType.parse(""), ""));
     }
+
 }
