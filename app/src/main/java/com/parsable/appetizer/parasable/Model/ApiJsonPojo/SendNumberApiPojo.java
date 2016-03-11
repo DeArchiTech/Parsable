@@ -19,7 +19,7 @@ public class SendNumberApiPojo implements IApiJsonPojo, Serializable{
     @JsonProperty(value = "text")
     public String text = "";
 
-    public SendNumberApiPojo(double num) {
-        this.text = String.valueOf(num);
+    public SendNumberApiPojo(String text) {
+        this.text = text;
     }
 }

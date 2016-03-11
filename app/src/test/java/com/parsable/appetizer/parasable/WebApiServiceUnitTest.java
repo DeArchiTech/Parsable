@@ -179,7 +179,7 @@ public class WebApiServiceUnitTest {
         this.service = buildWebApiService(token);
 
         //4)SendNumber
-        SendNumberApiPojo sendNumberApiPojo = new SendNumberApiPojo(1.0);
+        SendNumberApiPojo sendNumberApiPojo = new SendNumberApiPojo("1.0");
         Observable<ResponseBody> sendNumberObserver = this.service.sendNumber(sendNumberApiPojo);
         TestSubscriber<ResponseBody> sendNumbersubscriber = new TestSubscriber<ResponseBody>();
         sendNumberObserver.subscribe(sendNumbersubscriber);

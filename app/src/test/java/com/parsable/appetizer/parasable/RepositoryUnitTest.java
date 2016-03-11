@@ -1,6 +1,9 @@
 package com.parsable.appetizer.parasable;
 
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
+import com.parsable.appetizer.parasable.Event.LoginEvent;
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
 import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
@@ -55,28 +58,62 @@ public class RepositoryUnitTest {
     @Test
     public void loginActionTest(){
 
-        assert(false);
+        //1)Mock Event
+        LoginEvent event = new LoginEvent(this.email, this.password);
+
+        //2)Get Observables
+        Observable<AuthToken> observable = repository.loginAction(event);
+        TestSubscriber<AuthToken> subscriber = new TestSubscriber<>();
+        observable.subscribe(subscriber);
+
+        //3)Assert Subscriber
+        subscriber.assertCompleted();
+        subscriber.assertNoErrors();
+        assert (subscriber.getOnNextEvents().get(0) != null);
 
     }
 
     @Test
     public void logOutActionTest(){
 
-        assert(false);
+        //1)Get Observables by calling service
+        Observable<ResponseBody> observable = this.repository.logOut();
+        TestSubscriber<ResponseBody> subscriber = new TestSubscriber<>();
+        observable.subscribe(subscriber);
+
+        //2)Assert subscriber
+        subscriber.assertCompleted();
+        subscriber.assertNoErrors();
+        assert (subscriber.getOnNextEvents().get(0) != null);
 
     }
 
     @Test
     public void sendTextActionTest(){
 
-        assert(false);
+        //1)Get observable and subscriber
+        Observable<ResponseBody> observable = this.repository.sendText("hello");
+        TestSubscriber<ResponseBody> subscriber = new TestSubscriber<>();
+        observable.subscribe(subscriber);
 
+        //2)Assert subscriber
+        subscriber.assertCompleted();
+        subscriber.assertNoErrors();
+        assert (subscriber.getOnNextEvents().get(0) != null);
     }
 
     @Test
     public void sendNumberActionTest(){
 
-        assert(false);
+        //1)Get observable and subscriber
+        Observable<ResponseBody> observable = this.repository.sendNumber("hello");
+        TestSubscriber<ResponseBody> subscriber = new TestSubscriber<>();
+        observable.subscribe(subscriber);
+
+        //2)Assert subscriber
+        subscriber.assertCompleted();
+        subscriber.assertNoErrors();
+        assert (subscriber.getOnNextEvents().get(0) != null);
 
     }
 }
