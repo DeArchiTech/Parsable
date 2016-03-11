@@ -1,4 +1,4 @@
-package com.parsable.appetizer.parasable;
+package com.parsable.appetizer.parasable.Util;
 import java.util.UUID;
 
 /**
