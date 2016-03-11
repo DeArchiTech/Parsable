@@ -7,8 +7,6 @@ package com.parsable.appetizer.parasable.View
 //By the signUp or when the Login buttons
 interface ILoginView{
 
-    fun displayError()
-
-    fun displaySuccessMessage(action : String)
+    fun displayActionAndResult(action: String, result : Boolean)
 
 }

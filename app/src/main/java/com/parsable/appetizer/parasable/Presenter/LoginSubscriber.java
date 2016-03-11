@@ -8,7 +8,7 @@ import rx.Subscriber;
 /**
  * Created by Davix on 3/10/16.
  */
-public class LoginSubscriber<ResponseBody> extends Subscriber<ResponseBody> {
+public class LoginSubscriber<T> extends Subscriber<T> {
 
     ILoginView view ;
     ParsableEnum.actionName action;
@@ -26,13 +26,13 @@ public class LoginSubscriber<ResponseBody> extends Subscriber<ResponseBody> {
     @Override
     public void onError(Throwable e) {
 
-        this.view.displayError();
+        this.view.displayActionAndResult(this.action.name(), false);
     }
 
     @Override
-    public void onNext(ResponseBody responseBody) {
+    public void onNext(T t) {
 
-        this.view.displaySuccessMessage(this.action.name());
+        this.view.displayActionAndResult(this.action.name(), true );
 
     }
 }

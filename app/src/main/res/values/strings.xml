@@ -16,5 +16,8 @@
 
     <string name="endPoint">http://54.186.152.100/80</string>
     <string name="authorizationToken">94213A6A-72A0-41F9-9084-AD615378CEC7</string>
+    <string name="displayErrorTitlePostfix"> has caused an error</string>
+    <string name="displayErrorMessagePostfix"> Failed</string>
+    <string name="displaySuccessButton">SUCCESS!</string>
 
 </resources>

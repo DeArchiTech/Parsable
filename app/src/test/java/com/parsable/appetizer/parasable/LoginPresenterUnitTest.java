@@ -7,7 +7,6 @@ import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
-import com.parsable.appetizer.parasable.Presenter.LoginSubscriber;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
 import com.parsable.appetizer.parasable.View.ILoginView;
@@ -19,16 +18,15 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import okhttp3.ResponseBody;
-import rx.Observable;
 import rx.Subscriber;
-import rx.observers.TestSubscriber;
 
 /**
  * Created by Davix on 3/10/16.
  */
+
 @Config(sdk = Build.VERSION_CODES.LOLLIPOP , manifest = "src/main/AndroidManifest.xml")
 @RunWith(RobolectricTestRunner.class)
-public class LoginPresenterImplUnitTest {
+public class LoginPresenterUnitTest {
 
     ILoginPresenter presenter;
     IRepository repository;

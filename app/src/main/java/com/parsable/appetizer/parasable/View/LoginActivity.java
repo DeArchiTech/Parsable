@@ -3,9 +3,11 @@ package com.parsable.appetizer.parasable.View;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -31,6 +33,7 @@ import android.widget.TextView;
 
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
+import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
@@ -51,17 +54,24 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> , ILoginView, ILoginController {
 
     private ILoginPresenter presenter;
+    private String email;
+    private String password;
+
     //Textview to hold Email and Password Fields
 
     public ILoginPresenter getPresenter() {
 
-        if(presenter == null){
-            presenter = new LoginPresenterImpl(
+        if(this.presenter == null){
+            this.presenter = new LoginPresenterImpl(
                     new RepositoryImpl(
                             new RetrofitHelper().buildWebApiService()),this);
         }
         return presenter;
 
+    }
+
+    public void setPresenter(ILoginPresenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
@@ -70,8 +80,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(inputIsValid()){
             LoginEvent event = null;
             getPresenter().loginAction(event);
-        }else{
-            displayError();
         }
 
     }
@@ -89,27 +97,62 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(inputIsValid()){
             CreateAccountEvent event = null;
             getPresenter().createAccountAction(event);
-        }else{
-            displayError();
         }
     }
 
     @Override
-    public void displayError() {
+    public void displayActionAndResult(String action, boolean result){
 
-        //Todo Implement
+        if(result){
+
+            this.displaySuccessMessage(action);
+
+        }else{
+
+            this.displayError(action);
+        }
+
     }
 
-    @Override
-    public void displaySuccessMessage(@NotNull String action) {
+    private void displayError(String action) {
 
-        //Todo Implement
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(action + getString(R.string.displayErrorTitlePostfix))
+                .setPositiveButton(action + getString(R.string.displayErrorMessagePostfix), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog  = builder.create();
+        dialog.create();
+
+
+    }
+
+    private void displaySuccessMessage(@NotNull String action) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(action)
+                .setPositiveButton(getString(R.string.displaySuccessButton), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog  = builder.create();
+        dialog.create();
 
     }
 
     private boolean inputIsValid(){
 
-        return true;
+        boolean inputIsValid = this.email!=null && this.password!=null;
+        if(inputIsValid == false){
+
+            //Todo Notifiy user with input error
+        }
+        return inputIsValid;
 
     }
 
