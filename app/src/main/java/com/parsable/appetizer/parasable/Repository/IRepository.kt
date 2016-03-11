@@ -1,23 +1,29 @@
 package com.parsable.appetizer.parasable.Repository
 
-import com.parsable.appetizer.parasable.Model.NumData
-import com.parsable.appetizer.parasable.Model.TextData
-import com.parsable.appetizer.parasable.ParsableEnum
-import io.realm.RealmResults
+import com.parsable.appetizer.parasable.Event.LoginEvent
+import com.parsable.appetizer.parasable.Event.CreateAccountEvent
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken
+import okhttp3.ResponseBody
 import rx.Observable
 
 /**
- * Created by Davix on 3/8/16.
+ * Created by Davix on 3/10/16.
  */
 
-interface IRepository {
+interface IRepository{
 
-    fun readTextData(result: ParsableEnum.callBackResult): Observable<RealmResults<TextData>>
+    //Sign Up
+    fun createAccountAction(event : CreateAccountEvent): Observable<ResponseBody>
 
-    fun readNumData(result: ParsableEnum.callBackResult): Observable<RealmResults<NumData>>
+    //Login
+    fun loginAction(event : LoginEvent): Observable<AuthToken>
 
-    fun createTextData(data : TextData): Observable<TextData>
+    //LogOut
+    fun logOut() : Observable<ResponseBody>
 
-    fun createNumData(data : NumData): Observable<NumData>
+    //Send Text
+    fun sendText(text : String): Observable<ResponseBody>
 
+    //Send Number
+    fun sendNumber(text : String): Observable<ResponseBody>
 }

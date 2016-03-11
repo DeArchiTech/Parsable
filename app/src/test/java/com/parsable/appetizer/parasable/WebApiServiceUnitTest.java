@@ -1,6 +1,5 @@
 package com.parsable.appetizer.parasable;
 import android.os.Build;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.CreatApiPojo;
 import org.junit.Before;
@@ -14,11 +13,7 @@ import com.parsable.appetizer.parasable.Model.ApiJsonPojo.LoginApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendNumberApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
 import com.parsable.appetizer.parasable.Network.*;
-import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
@@ -201,17 +196,7 @@ public class WebApiServiceUnitTest {
 
     private IWebApiService buildWebApiService(AuthToken token){
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new ParsableInterceptor(token))
-                .build();
+        return new RetrofitHelper().buildWebApiService(token);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://54.186.152.100")
-                .client(client)
-                .addConverterFactory(JacksonConverterFactory.create(new ObjectMapper()))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-
-        return retrofit.create(IWebApiService.class);
     }
 }

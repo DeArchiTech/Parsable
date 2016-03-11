@@ -7,8 +7,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
-import com.parsable.appetizer.parasable.Repository.IRepository;
-import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.Repository.IDataStore;
+import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
 import com.parsable.appetizer.parasable.View.LoginActivity;
 
 import org.junit.Before;
@@ -17,8 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -35,7 +33,7 @@ import rx.observers.TestSubscriber;
 @RunWith(AndroidJUnit4.class)
 public class RepositoryImplUnitTest{
 
-    IRepository repository;
+    IDataStore repository;
     Realm realm;
 
     @Rule
@@ -55,7 +53,7 @@ public class RepositoryImplUnitTest{
                         .build();
 
                 RepositoryImplUnitTest.this.realm = Realm.getInstance(realmConfig);
-                RepositoryImplUnitTest.this.repository = new RepositoryImpl(realmConfig, realm);
+                RepositoryImplUnitTest.this.repository = new DataStoreImpl(realmConfig, realm);
             }
         });
 
