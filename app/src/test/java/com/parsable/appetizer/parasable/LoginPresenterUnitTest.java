@@ -5,6 +5,7 @@ import android.os.Build;
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
+import com.parsable.appetizer.parasable.Util.StringHelper;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
 import com.parsable.appetizer.parasable.Repository.IRepository;
@@ -43,7 +44,7 @@ public class LoginPresenterUnitTest {
         this.presenter = new LoginPresenterImpl(this.repository, this.view);
         this.email = new StringHelper().generateEmail();
         this.loginEmail = new StringHelper().generateLoginEmail();
-        this.password = new StringHelper().generatePassword();
+        this.password = new StringHelper().createLoginPassword();
     }
 
     @Test

@@ -33,7 +33,6 @@ import android.widget.TextView;
 
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
-import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
@@ -47,18 +46,42 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> , ILoginView, ILoginController {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> , ILoginView, ILoginController, OnClickListener {
 
     private ILoginPresenter presenter;
-    private String email;
-    private String password;
+    @Bind(R.id.email) TextView emailTextView;
+    @Bind(R.id.password) TextView passwordTextView;
+    @Bind(R.id.login_btn) Button loginButton;
+    @Bind(R.id.create_accnt_btn) Button createAccountViewButton;
+    private boolean loggedIn = false;
 
-    //Textview to hold Email and Password Fields
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+
+        switch(id){
+
+            case R.id.login_btn:
+
+                this.loginButtonPressed();
+                break;
+
+            case R.id.create_accnt_btn;
+
+                this.createAccountButtonPressed();
+                break;
+
+        }
+    }
 
     public ILoginPresenter getPresenter() {
 
@@ -79,8 +102,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void loginButtonPressed() {
 
         if(inputIsValid()){
-            LoginEvent event = null;
+
+            LoginEvent event = new LoginEvent(
+                    this.emailTextView.getText().toString(),
+                    this.passwordTextView.getText().toString());
             getPresenter().loginAction(event);
+
         }
 
     }
@@ -96,28 +123,63 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void createAccountButtonPressed() {
 
         if(inputIsValid()){
-            CreateAccountEvent event = null;
+
+            CreateAccountEvent event = new CreateAccountEvent(
+                    this.emailTextView.getText().toString(),
+                    this.passwordTextView.getText().toString());
             getPresenter().createAccountAction(event);
+
         }
     }
 
     @Override
-    public void displayActionAndResult(ParsableEnum.actionName action, boolean result){
+    public void displayActionAndResult(ParsableEnum.actionName action, boolean result) {
 
         if(result){
 
-            this.displaySuccessMessage(action.name());
+            updateLoggedInStatus(action);
+            displaySuccessMessage(action.name());
+
+            if(action == ParsableEnum.actionName.Login){
+
+                pushSendDataActivity();
+
+            }
 
         }else{
 
-            this.displayError(action.name());
+            displayError(action.name());
         }
 
     }
 
+    private void pushSendDataActivity(){
+
+    }
+
+    private void updateLoginOutButton(boolean result){
+
+        if(result){
+            this.loginButton.setText(getString(R.string.logOutButton));
+        }else{
+            this.loginButton.setText(getString(R.string.logInButton));
+        }
+
+    }
+
+    private void updateLoggedInStatus(ParsableEnum.actionName action){
+
+        if (action == ParsableEnum.actionName.Login ) {
+            this.loggedIn = true;
+        } else if (action == ParsableEnum.actionName.LogOut) {
+            this.loggedIn = false;
+        }
+        updateLoginOutButton(this.loggedIn);
+    }
+
     private void displayError(String action) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setMessage(action + getString(R.string.displayErrorTitlePostfix))
                 .setPositiveButton(action + getString(R.string.displayErrorMessagePostfix), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -126,14 +188,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
                 });
         AlertDialog dialog  = builder.create();
-        dialog.create();
+        dialog.show();
 
 
     }
 
     private void displaySuccessMessage(@NotNull String action) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setMessage(action)
                 .setPositiveButton(getString(R.string.displaySuccessButton), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -142,13 +204,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     }
                 });
         AlertDialog dialog  = builder.create();
-        dialog.create();
+        dialog.show();
 
     }
 
     private boolean inputIsValid(){
 
-        boolean inputIsValid = this.email!=null && this.password!=null;
+        boolean inputIsValid = this.emailTextView.getText()!=null
+                && this.passwordTextView.getText()!=null;
         if(inputIsValid == false){
 
             //Todo Notifiy user with input error
@@ -188,6 +251,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
+        ButterKnife.bind(this);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
@@ -203,7 +267,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.login_btn);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -213,6 +277,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        this.loginButton.setOnClickListener(this);
+        this.createAccountViewButton.setOnClickListener(this);
     }
 
     private void populateAutoComplete() {

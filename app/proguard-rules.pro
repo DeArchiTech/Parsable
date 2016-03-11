@@ -34,5 +34,19 @@
 -keepattributes Signature
 -keepattributes Exceptions
 
--dontwarn retrofit2.**
+-dontwarn retrofit2.**∑
 -keep class retrofit2.** { *; }
+
+#Butter Knife
+
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}

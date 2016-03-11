@@ -21,7 +21,7 @@ public class StringHelper {
         return "david@parsable.com";
     }
 
-    public String generatePassword(){
+    public String createLoginPassword(){
 
         return "parsable";
     }

@@ -3,8 +3,10 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Log In</string>
+    <string name="action_push_send_data_view">Send Data</string>
+    <string name="action_push_create_acct_view">Create Account</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -19,5 +21,7 @@
     <string name="displayErrorTitlePostfix"> has caused an error</string>
     <string name="displayErrorMessagePostfix"> Failed</string>
     <string name="displaySuccessButton">SUCCESS!</string>
+    <string name="logOutButton">Log Out Button</string>
+    <string name="logInButton">Log In Button</string>
 
 </resources>

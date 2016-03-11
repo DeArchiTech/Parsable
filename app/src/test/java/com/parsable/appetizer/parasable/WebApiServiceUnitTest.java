@@ -12,6 +12,7 @@ import com.parsable.appetizer.parasable.Model.ApiJsonPojo.LogOutApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.LoginApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendNumberApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
+import com.parsable.appetizer.parasable.Util.StringHelper;
 import com.parsable.appetizer.parasable.Network.*;
 import okhttp3.ResponseBody;
 import rx.Observable;
