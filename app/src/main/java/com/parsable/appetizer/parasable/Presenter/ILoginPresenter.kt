@@ -13,9 +13,9 @@ interface ILoginPresenter{
 
     //Login Action by sending login info
     //Returns an observable where you can define your subscriber
-    fun createAccountAction(event : CreateAccountEvent): Subscriber<ResponseBody>
+    fun createAccountAction(event : CreateAccountEvent, subscriber: Subscriber<ResponseBody>)
 
-    fun loginAction(event : LoginEvent): Subscriber<AuthToken>
+    fun loginAction(event : LoginEvent, subscriber : Subscriber<AuthToken>)
 
-    fun logOutAction(): Subscriber<ResponseBody>
+    fun logOutAction(subscriber: Subscriber<ResponseBody>)
 }

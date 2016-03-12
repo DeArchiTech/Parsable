@@ -10,4 +10,7 @@ interface ILoginController{
     fun loginButtonPressed()
 
     fun logoutButtonPressed()
+
+    fun sendDataButtonPressed()
+
 }

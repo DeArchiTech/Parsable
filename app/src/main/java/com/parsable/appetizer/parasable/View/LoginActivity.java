@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -33,12 +34,16 @@ import android.widget.TextView;
 
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
 import com.parsable.appetizer.parasable.R;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.Subscriber.CreateAccountSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.LogOutSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.LoginSubscriber;
 import com.parsable.appetizer.parasable.View.Controller.ILoginController;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +53,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -61,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Bind(R.id.password) TextView passwordTextView;
     @Bind(R.id.login_btn) Button loginButton;
     @Bind(R.id.create_accnt_btn) Button createAccountViewButton;
+    @Bind(R.id.push_send_data_view_btn) Button pushSendDataViewButton;
     private boolean loggedIn = false;
 
     @Override
@@ -75,9 +82,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 this.loginButtonPressed();
                 break;
 
-            case R.id.create_accnt_btn;
+            case R.id.create_accnt_btn:
 
                 this.createAccountButtonPressed();
+                break;
+
+            case R.id.push_send_data_view_btn:
+
+                this.sendDataButtonPressed();
                 break;
 
         }
@@ -87,8 +99,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if(this.presenter == null){
             this.presenter = new LoginPresenterImpl(
-                    new RepositoryImpl(
-                            new RetrofitHelper().buildWebApiService()),this);
+                    new RepositoryImpl());
         }
         return presenter;
 
@@ -106,7 +117,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             LoginEvent event = new LoginEvent(
                     this.emailTextView.getText().toString(),
                     this.passwordTextView.getText().toString());
-            getPresenter().loginAction(event);
+            getPresenter().loginAction(event
+                    , new LoginSubscriber<AuthToken>(this));
 
         }
 
@@ -115,7 +127,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void logoutButtonPressed() {
 
-        getPresenter().logOutAction();
+        getPresenter().logOutAction(
+                new LogOutSubscriber<ResponseBody>(this));
 
     }
 
@@ -127,9 +140,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             CreateAccountEvent event = new CreateAccountEvent(
                     this.emailTextView.getText().toString(),
                     this.passwordTextView.getText().toString());
-            getPresenter().createAccountAction(event);
+            getPresenter().createAccountAction(event
+                    ,new CreateAccountSubscriber<ResponseBody>(this));
 
         }
+    }
+
+    @Override
+    public void sendDataButtonPressed() {
+
+        Intent i = new Intent(LoginActivity.this, SendDataActivity.class);
+        startActivity(i);
+
     }
 
     @Override
@@ -137,14 +159,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if(result){
 
-            updateLoggedInStatus(action);
-            displaySuccessMessage(action.name());
-
             if(action == ParsableEnum.actionName.Login){
 
-                pushSendDataActivity();
+                updateLoggedInStatus(action);
+                updateButtons(this.loggedIn);
 
             }
+            displaySuccessMessage(action.name());
 
         }else{
 
@@ -153,35 +174,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void pushSendDataActivity(){
-
-    }
-
-    private void updateLoginOutButton(boolean result){
-
-        if(result){
-            this.loginButton.setText(getString(R.string.logOutButton));
-        }else{
-            this.loginButton.setText(getString(R.string.logInButton));
-        }
-
-    }
-
-    private void updateLoggedInStatus(ParsableEnum.actionName action){
-
-        if (action == ParsableEnum.actionName.Login ) {
-            this.loggedIn = true;
-        } else if (action == ParsableEnum.actionName.LogOut) {
-            this.loggedIn = false;
-        }
-        updateLoginOutButton(this.loggedIn);
-    }
-
     private void displayError(String action) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setMessage(action + getString(R.string.displayErrorTitlePostfix))
-                .setPositiveButton(action + getString(R.string.displayErrorMessagePostfix), new DialogInterface.OnClickListener() {
+        builder.setMessage(action + " " + getString(R.string.displayErrorTitlePostfix))
+                .setPositiveButton(action + " " +getString(R.string.displayErrorMessagePostfix), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!
                         dialog.dismiss();
@@ -208,15 +205,38 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    private void updateButtons(boolean result){
+
+        if(result){
+            this.loginButton.setText(getString(R.string.logOutButton));
+            this.pushSendDataViewButton.setVisibility(View.VISIBLE);
+        }else{
+            this.loginButton.setText(getString(R.string.logInButton));
+            this.pushSendDataViewButton.setVisibility(View.INVISIBLE);
+
+        }
+
+    }
+
+    private void updateLoggedInStatus(ParsableEnum.actionName action){
+
+        if (action == ParsableEnum.actionName.Login ) {
+            this.loggedIn = true;
+        } else if (action == ParsableEnum.actionName.LogOut) {
+            this.loggedIn = false;
+        }
+
+    }
+
+
     private boolean inputIsValid(){
 
-        boolean inputIsValid = this.emailTextView.getText()!=null
-                && this.passwordTextView.getText()!=null;
-        if(inputIsValid == false){
-
-            //Todo Notifiy user with input error
+        boolean result = false;
+        if(this.emailTextView != null && this.passwordTextView !=null) {
+            result = this.emailTextView.getText() != null
+                    && this.passwordTextView.getText() != null;
         }
-        return inputIsValid;
+        return result;
 
     }
 

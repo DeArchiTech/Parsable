@@ -1,5 +1,4 @@
 package com.parsable.appetizer.parasable;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -20,12 +19,31 @@ public class LoginActivityUITest {
     @Rule
     public final ActivityTestRule<LoginActivity> login = new ActivityTestRule<>(LoginActivity.class);
 
-    //No Need to test displayAction Result all four cases
+    @Test
+    public void createAccountButtonSuccessTest() {
+
+        //1)Input Keyboard event for email
+        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().generateEmail()));
+
+        //2)Input Keyboard event for password
+        onView(withId(R.id.password)).perform(ViewActions.typeText(new StringHelper().createLoginPassword()));
+
+        //3)Press Create Button
+        onView(withId(R.id.create_accnt_btn)).perform(ViewActions.click());
+
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
+
+        //5)Assert That Push Send data Activity Button is Visible
+        onView(withId(R.id.push_send_data_view_btn)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+    }
+
     @Test
     public void loginButtonPressedSuccessTest() {
 
         //1)Input Keyboard event for email
-        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().generateLoginEmail()));
+        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().createLoginEmail()));
 
         //2)Input Keyboard event for password
         onView(withId(R.id.password)).perform(ViewActions.typeText(new StringHelper().createLoginPassword()));
@@ -33,7 +51,11 @@ public class LoginActivityUITest {
         //3)Press Login Button
         onView(withId(R.id.login_btn)).perform(ViewActions.click());
 
-        //4)Assert Push Send Data Button Clickable
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
+
+        //5)Assert Push Send Data Button Clickable
+        onView(withId(R.id.push_send_data_view_btn)).check( ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
     }
 
@@ -41,7 +63,26 @@ public class LoginActivityUITest {
     public void loginButtonPressedFailTest() {
 
         //1)Input Keyboard event for email
-        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().generateLoginEmail()));
+        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().createLoginEmail()));
+
+        //2)Input Keyboard event for password
+        onView(withId(R.id.password)).perform(ViewActions.typeText(""));
+
+        //3)Press Login Button
+        onView(withId(R.id.login_btn)).perform(ViewActions.click());
+
+
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
+        //4)Assert Push Send Data Button Not Clickable
+
+    }
+
+    @Test
+    public void logoutButtonPressedPassTest() {
+
+        //1)Input Keyboard event for email
+        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().createLoginEmail()));
 
         //2)Input Keyboard event for password
         onView(withId(R.id.password)).perform(ViewActions.typeText(new StringHelper().createLoginPassword()));
@@ -49,75 +90,36 @@ public class LoginActivityUITest {
         //3)Press Login Button
         onView(withId(R.id.login_btn)).perform(ViewActions.click());
 
-        //4)Assert Push Send Data Button Not Clickable
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
 
+        //4)Press Logout Button
+        onView(withId(R.id.login_btn)).perform(ViewActions.click());
+
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
     }
 
-    @Test
-    public void displayLoginPassTest() {
-
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                LoginActivityUITest.this.login.getActivity().displayActionAndResult(ParsableEnum.actionName.Login , true);
-            }
-        });
-
-    }
 
     @Test
-    public void displayLoginFailTest() {
-
-
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                LoginActivityUITest.this.login.getActivity().displayActionAndResult(ParsableEnum.actionName.Login , false);
-            }
-        });
-    }
-
-    @Test
-    public void displayLogoutPassTest() {
-
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                LoginActivityUITest.this.login.getActivity().displayActionAndResult(ParsableEnum.actionName.LogOut , true);
-
-            }
-        });
-    }
-
-    @Test
-    public void displayLogoutFailTest() {
-
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
-            @Override
-            public void run() {
-                LoginActivityUITest.this.login.getActivity().displayActionAndResult(ParsableEnum.actionName.LogOut , false);
-
-            }
-        });
-    }
-
-    @Test
-    public void pushSendDataActivityButtonVisibleTest() {
+    public void startDataActivityTest() {
 
         //1)Input Keyboard event for email
-        onView(withId(R.id.email)).perform(ViewActions.typeText("david@parsable"));
+        onView(withId(R.id.email)).perform(ViewActions.typeText(new StringHelper().createLoginEmail()));
 
         //2)Input Keyboard event for password
-        onView(withId(R.id.password)).perform(ViewActions.typeText("parsable"));
+        onView(withId(R.id.password)).perform(ViewActions.typeText(new StringHelper().createLoginPassword()));
 
         //3)Press Login Button
         onView(withId(R.id.login_btn)).perform(ViewActions.click());
 
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
 
-        //4)Assert That Push Send data Activity Button is Visible
-        onView(withId(R.id.push_send_data_view_btn)).check( ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        //5)Press Logout Button
+        onView(withId(R.id.push_send_data_view_btn)).perform(ViewActions.click());
 
-
+        //6)Assert on SendDataActivity
     }
 
 }

@@ -9,6 +9,7 @@ import com.parsable.appetizer.parasable.View.LoginActivity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
 import org.robolectric.RobolectricTestRunner;
 
 /**
@@ -25,7 +26,7 @@ public class LoginControllerUnitTest {
 
         LoginActivity activity = new LoginActivity();
         loginController = activity;
-        loginPresenter = new MockLoginPresenter(activity);
+        loginPresenter = PowerMockito.mock(ILoginPresenter.class);
         activity.setPresenter(loginPresenter);
 
     }
@@ -47,6 +48,13 @@ public class LoginControllerUnitTest {
     public void logoutButtonPressedTest(){
 
         this.loginController.logoutButtonPressed();
+
+    }
+
+    @Test
+    public void sendDataButtonPressedTest(){
+
+        this.loginController.sendDataButtonPressed();
 
     }
 

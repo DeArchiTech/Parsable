@@ -17,11 +17,17 @@
     </string>
 
     <string name="endPoint">http://54.186.152.100/80</string>
-    <string name="authorizationToken">94213A6A-72A0-41F9-9084-AD615378CEC7</string>
+
+    <!-- Login Screen -->
+
     <string name="displayErrorTitlePostfix"> has caused an error</string>
     <string name="displayErrorMessagePostfix"> Failed</string>
     <string name="displaySuccessButton">SUCCESS!</string>
     <string name="logOutButton">Log Out Button</string>
     <string name="logInButton">Log In Button</string>
+
+    <!-- Send Data Screen -->
+
+    <string name="sendDataButton">Send Data</string>
 
 </resources>

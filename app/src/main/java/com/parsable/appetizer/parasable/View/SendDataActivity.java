@@ -1,0 +1,119 @@
+package com.parsable.appetizer.parasable.View;
+
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.parsable.appetizer.parasable.Event.SendNumberEvent;
+import com.parsable.appetizer.parasable.Event.SendTextEvent;
+import com.parsable.appetizer.parasable.ParsableEnum;
+import com.parsable.appetizer.parasable.Presenter.ISendDataPresenter;
+import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
+import com.parsable.appetizer.parasable.R;
+import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.Subscriber.SendNumberSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.SendTextSubscriber;
+import com.parsable.appetizer.parasable.Util.StringHelper;
+
+import org.jetbrains.annotations.NotNull;
+
+import butterknife.Bind;
+import okhttp3.ResponseBody;
+
+public class SendDataActivity extends AppCompatActivity implements ISendDataScreen {
+
+    ISendDataPresenter presenter;
+
+    @Bind(R.id.sendDataEditText)
+    TextView sendDataTextView;
+
+    @Bind(R.id.sendDatabutton)
+    Button sendDataButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_send_data);
+    }
+
+    @Override
+    public void displayActionMessage(@NotNull ParsableEnum.actionName action, boolean result) {
+
+        //Action triggered by subscriber
+        //Action Title triggered by result
+
+    }
+
+    public ISendDataPresenter getPresenter() {
+        if(presenter == null){
+            presenter = new SendDataPresenterImpl(new RepositoryImpl());
+        }
+        return presenter;
+    }
+
+    @Override
+    public void sendDataButtonPressed() {
+
+        CharSequence input = getInput();
+        if(input != null){
+
+            //Call Presenter with Event
+            String inputString = input.toString();
+            if(new StringHelper().inputIsANumber(inputString)){
+                SendNumberEvent sendNumberEvent = new SendNumberEvent(Double.parseDouble(input.toString()));
+                getPresenter().sendNumberEvent(sendNumberEvent, new SendNumberSubscriber<ResponseBody>(this));
+            }
+            else{
+                SendTextEvent sendTextEvent = new SendTextEvent(input.toString());
+                getPresenter().sendTextEvent(sendTextEvent, new SendTextSubscriber<ResponseBody>(this));
+
+            }
+
+        }
+
+    }
+
+    private CharSequence getInput(){
+
+        if(this.sendDataTextView!=null){
+            return this.sendDataTextView.getText();
+        }
+        return null;
+
+    }
+
+
+    private void displayError(String action) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SendDataActivity.this);
+        builder.setMessage(action + " " + getString(R.string.displayErrorTitlePostfix))
+                .setPositiveButton(action + " " +getString(R.string.displayErrorMessagePostfix), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog  = builder.create();
+        dialog.show();
+
+
+    }
+
+    private void displaySuccessMessage(@NotNull String action) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SendDataActivity.this);
+        builder.setMessage(action)
+                .setPositiveButton(getString(R.string.displaySuccessButton), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog  = builder.create();
+        dialog.show();
+
+    }
+}

@@ -9,6 +9,8 @@ import com.parsable.appetizer.parasable.Model.ApiJsonPojo.LoginApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendNumberApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
 import com.parsable.appetizer.parasable.Network.IWebApiService;
+import com.parsable.appetizer.parasable.Network.RetrofitHelper;
+import com.parsable.appetizer.parasable.Subscriber.AuthTokenUpdateSubscriber;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +23,15 @@ import rx.Observable;
 public class RepositoryImpl implements IRepository{
 
     IWebApiService apiService;
+    private AuthToken token;
+
+    public RepositoryImpl(AuthToken token) {
+        this.apiService = new RetrofitHelper().buildWebApiService(token);
+    }
+
+    public RepositoryImpl() {
+        this.apiService = new RetrofitHelper().buildWebApiService(token);
+    }
 
     public RepositoryImpl(IWebApiService apiService) {
         this.apiService = apiService;
@@ -44,7 +55,9 @@ public class RepositoryImpl implements IRepository{
         LoginApiPojo pojo = new LoginApiPojo();
         pojo.setEmail(event.email);
         pojo.setPassword(event.password);
-        return this.apiService.loginAccount(pojo);
+        Observable<AuthToken> observable = this.apiService.loginAccount(pojo);
+        observable.subscribe(new AuthTokenUpdateSubscriber(this));
+        return observable;
 
     }
 
@@ -64,5 +77,19 @@ public class RepositoryImpl implements IRepository{
     @Override
     public Observable<ResponseBody> sendNumber(@NotNull String text) {
         return this.apiService.sendNumber(new SendNumberApiPojo(text));
+    }
+
+    @Override
+    public boolean updateAuthToken(@NotNull AuthToken token) {
+        this.token = token;
+        return true;
+    }
+
+    @Override
+    public boolean rebuildWebService() {
+
+        this.apiService = new RetrofitHelper().buildWebApiService(this.token);
+        return true;
+
     }
 }

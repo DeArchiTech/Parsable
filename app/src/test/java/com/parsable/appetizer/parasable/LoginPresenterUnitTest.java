@@ -5,6 +5,10 @@ import android.os.Build;
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
+import com.parsable.appetizer.parasable.Network.RetrofitHelper;
+import com.parsable.appetizer.parasable.Subscriber.CreateAccountSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.LogOutSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.LoginSubscriber;
 import com.parsable.appetizer.parasable.Util.StringHelper;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
@@ -40,10 +44,10 @@ public class LoginPresenterUnitTest {
     public void setUp(){
 
         this.view = new MockLoginView();
-        this.repository = new RepositoryImpl(new MockWebApiService());
-        this.presenter = new LoginPresenterImpl(this.repository, this.view);
+        this.repository = new RepositoryImpl(new RetrofitHelper().buildWebApiService());
+        this.presenter = new LoginPresenterImpl(this.repository);
         this.email = new StringHelper().generateEmail();
-        this.loginEmail = new StringHelper().generateLoginEmail();
+        this.loginEmail = new StringHelper().createLoginEmail();
         this.password = new StringHelper().createLoginPassword();
     }
 
@@ -51,8 +55,7 @@ public class LoginPresenterUnitTest {
     public void logoutActionTest(){
 
         //1)Get Observable and subscriber
-        Subscriber<ResponseBody> subscriber = this.presenter.logOutAction();
-        assert (subscriber!=null);
+        this.presenter.logOutAction(new LogOutSubscriber<ResponseBody>(this.view));
         //Todo Write Logic To Test Subscribers
     }
 
@@ -61,8 +64,7 @@ public class LoginPresenterUnitTest {
 
         //1)Get Observable and subscriber
         LoginEvent event = new LoginEvent(this.email , this.password);
-        Subscriber<AuthToken> subscriber = this.presenter.loginAction(event);
-        assert (subscriber!=null);
+        this.presenter.loginAction(event, new LoginSubscriber<AuthToken>(this.view));
     }
 
     @Test
@@ -70,8 +72,7 @@ public class LoginPresenterUnitTest {
 
         //1)Get Observable and subscriber
         CreateAccountEvent event = new CreateAccountEvent(this.email , this.password);
-        Subscriber<ResponseBody> subscriber = this.presenter.createAccountAction(event);
-        assert (subscriber!=null);
+        this.presenter.createAccountAction(event,new CreateAccountSubscriber<ResponseBody>(this.view));
 
     }
 

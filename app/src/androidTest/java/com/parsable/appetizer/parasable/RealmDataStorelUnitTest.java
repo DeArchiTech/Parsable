@@ -31,7 +31,7 @@ import rx.observers.TestSubscriber;
 //Note: Can't run this with unit test
 //Need to run this with instrumental test
 @RunWith(AndroidJUnit4.class)
-public class RepositoryImplUnitTest{
+public class RealmDataStorelUnitTest {
 
     IDataStore repository;
     Realm realm;
@@ -52,8 +52,8 @@ public class RepositoryImplUnitTest{
                         .inMemory()
                         .build();
 
-                RepositoryImplUnitTest.this.realm = Realm.getInstance(realmConfig);
-                RepositoryImplUnitTest.this.repository = new DataStoreImpl(realmConfig, realm);
+                RealmDataStorelUnitTest.this.realm = Realm.getInstance(realmConfig);
+                RealmDataStorelUnitTest.this.repository = new DataStoreImpl(realmConfig, realm);
             }
         });
 
@@ -73,7 +73,7 @@ public class RepositoryImplUnitTest{
                 data.setData("testData");
                 data.setResult(ParsableEnum.callBackResult.ERROR.name());
                 //2)Save Object To Realm
-                Observable<TextData> observable = RepositoryImplUnitTest.this.repository.createTextData(data);
+                Observable<TextData> observable = RealmDataStorelUnitTest.this.repository.createTextData(data);
                 //3)Assert
                 TestSubscriber<TextData> subscriber = new TestSubscriber<TextData>();
                 observable.subscribe(subscriber);
@@ -97,17 +97,17 @@ public class RepositoryImplUnitTest{
 
                 //Test Algorithm
                 //1)Create Object
-                RepositoryImplUnitTest.this.realm.beginTransaction();
-                TextData data = RepositoryImplUnitTest.this.realm.createObject(TextData.class);
+                RealmDataStorelUnitTest.this.realm.beginTransaction();
+                TextData data = RealmDataStorelUnitTest.this.realm.createObject(TextData.class);
                 data.setData(UUID.randomUUID().toString());
                 data.setResult(ParsableEnum.callBackResult.ERROR.name());
 
                 //2)Save object To realm
-                RepositoryImplUnitTest.this.realm.commitTransaction();
+                RealmDataStorelUnitTest.this.realm.commitTransaction();
 
                 //3)Retrieve object from realm
                 Observable<RealmResults<TextData>> observable
-                        = RepositoryImplUnitTest.this.repository.readTextData(ParsableEnum.callBackResult.ERROR);
+                        = RealmDataStorelUnitTest.this.repository.readTextData(ParsableEnum.callBackResult.ERROR);
 
                 //4)Assert No Error
                 TestSubscriber<RealmResults<TextData>> subscriber = new TestSubscriber<RealmResults<TextData>>();
@@ -137,7 +137,7 @@ public class RepositoryImplUnitTest{
                 data.setResult(ParsableEnum.callBackResult.ERROR.name());
 
                 //2)Save Object To Realm
-                Observable<NumData> observable = RepositoryImplUnitTest.this.repository.createNumData(data);
+                Observable<NumData> observable = RealmDataStorelUnitTest.this.repository.createNumData(data);
                 //3)Assert
                 TestSubscriber<NumData> subscriber = new TestSubscriber<NumData>();
                 observable.subscribe(subscriber);
@@ -159,17 +159,17 @@ public class RepositoryImplUnitTest{
 
                 //Test Algorithm
                 //1)Create Object
-                RepositoryImplUnitTest.this.realm.beginTransaction();
-                NumData data = RepositoryImplUnitTest.this.realm.createObject(NumData.class);
+                RealmDataStorelUnitTest.this.realm.beginTransaction();
+                NumData data = RealmDataStorelUnitTest.this.realm.createObject(NumData.class);
                 data.setData(1.0);
                 data.setResult(ParsableEnum.callBackResult.ERROR.name());
 
                 //2)Save object To realm
-                RepositoryImplUnitTest.this.realm.commitTransaction();
+                RealmDataStorelUnitTest.this.realm.commitTransaction();
 
                 //3)Retrieve object from realm
                 Observable<RealmResults<NumData>> observable
-                        = RepositoryImplUnitTest.this.repository.readNumData(ParsableEnum.callBackResult.ERROR);
+                        = RealmDataStorelUnitTest.this.repository.readNumData(ParsableEnum.callBackResult.ERROR);
 
                 //4)Assert No Error
                 TestSubscriber<RealmResults<NumData>> subscriber = new TestSubscriber<RealmResults<NumData>>();

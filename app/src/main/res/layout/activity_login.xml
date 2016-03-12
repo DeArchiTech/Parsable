@@ -64,6 +64,15 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
+                android:id="@+id/create_accnt_btn"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_push_create_acct_view"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/login_btn"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
@@ -73,14 +82,15 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/create_accnt_btn"
+                android:id="@+id/push_send_data_view_btn"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_push_create_acct_view"
+                android:text="@string/action_push_send_data_view"
                 android:textStyle="bold"
-                android:clickable="false"/>
+                android:visibility="invisible"/>
+
 
         </LinearLayout>
     </ScrollView>

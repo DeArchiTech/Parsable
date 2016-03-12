@@ -1,4 +1,4 @@
-package com.parsable.appetizer.parasable.Presenter;
+package com.parsable.appetizer.parasable.Subscriber;
 
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.View.ILoginView;
@@ -11,11 +11,10 @@ import rx.Subscriber;
 public class LoginSubscriber<T> extends Subscriber<T> {
 
     ILoginView view ;
-    ParsableEnum.actionName action;
+    ParsableEnum.actionName action = ParsableEnum.actionName.Login;
 
-    public LoginSubscriber(ILoginView view, ParsableEnum.actionName action) {
+    public LoginSubscriber(ILoginView view) {
         this.view = view;
-        this.action = action;
     }
 
     @Override
@@ -26,13 +25,21 @@ public class LoginSubscriber<T> extends Subscriber<T> {
     @Override
     public void onError(Throwable e) {
 
-        this.view.displayActionAndResult(this.action, false);
+        if(this.view !=null){
+            this.view.displayActionAndResult(this.action, false);
+        }
     }
 
     @Override
     public void onNext(T t) {
 
-        this.view.displayActionAndResult(this.action, true );
+        if(this.view != null){
+            this.view.displayActionAndResult(this.action, true );
+        }
 
+    }
+
+    public void setView(ILoginView view) {
+        this.view = view;
     }
 }

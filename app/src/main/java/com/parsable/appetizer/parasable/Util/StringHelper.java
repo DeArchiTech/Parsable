@@ -16,7 +16,7 @@ public class StringHelper {
         return sb.toString();
     }
 
-    public String generateLoginEmail(){
+    public String createLoginEmail(){
 
         return "david@parsable.com";
     }
@@ -24,5 +24,12 @@ public class StringHelper {
     public String createLoginPassword(){
 
         return "parsable";
+    }
+
+
+    public boolean inputIsANumber(String input){
+
+        return false;
+
     }
 }
