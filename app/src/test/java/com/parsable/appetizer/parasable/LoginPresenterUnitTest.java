@@ -55,8 +55,9 @@ public class LoginPresenterUnitTest {
     public void logoutActionTest(){
 
         //1)Get Observable and subscriber
+        Subscriber<ResponseBody> subscriber = new LoginSubscriber<ResponseBody>(this.view);
         this.presenter.logOutAction(new LogOutSubscriber<ResponseBody>(this.view));
-        //Todo Write Logic To Test Subscribers
+
     }
 
     @Test

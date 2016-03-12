@@ -159,12 +159,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if(result){
 
-            if(action == ParsableEnum.actionName.Login){
-
-                updateLoggedInStatus(action);
-                updateButtons(this.loggedIn);
-
-            }
+            updateLoggedInStatus();
             displaySuccessMessage(action.name());
 
         }else{
@@ -218,13 +213,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void updateLoggedInStatus(ParsableEnum.actionName action){
+    private void updateLoggedInStatus(){
 
-        if (action == ParsableEnum.actionName.Login ) {
-            this.loggedIn = true;
-        } else if (action == ParsableEnum.actionName.LogOut) {
-            this.loggedIn = false;
-        }
+        this.loggedIn = !this.loggedIn;
 
     }
 

@@ -42,8 +42,14 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
     @Override
     public void displayActionMessage(@NotNull ParsableEnum.actionName action, boolean result) {
 
-        //Action triggered by subscriber
-        //Action Title triggered by result
+        if (result) {
+
+            displaySuccessMessage(action.name());
+
+        } else {
+
+            displayError(action.name());
+        }
 
     }
 
@@ -52,6 +58,13 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
             presenter = new SendDataPresenterImpl(new RepositoryImpl());
         }
         return presenter;
+    }
+
+
+    @Override
+    public void setPresnter(@NotNull ISendDataPresenter presenter) {
+        this.presenter = presenter;
+
     }
 
     @Override
