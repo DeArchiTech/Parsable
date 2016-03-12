@@ -11,6 +11,8 @@ import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
 import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.Subscriber.AuthTokenUpdateSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
+import com.parsable.appetizer.parasable.Util.StringHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -92,4 +94,16 @@ public class RepositoryImpl implements IRepository{
         return true;
 
     }
+
+    @Override
+    public void autoLogin(@NotNull AutoLoginSubscriber<AuthToken> subscriber) {
+
+        LoginApiPojo pojo = new LoginApiPojo();
+        pojo.setEmail(new StringHelper().createLoginEmail());
+        pojo.setPassword(new StringHelper().createLoginPassword());
+        Observable<AuthToken> observable = this.apiService.loginAccount(pojo);
+        observable.subscribe(subscriber);
+
+    }
+
 }

@@ -7,6 +7,7 @@ import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
 import com.parsable.appetizer.parasable.Util.StringHelper;
 
 import org.junit.Before;
@@ -128,6 +129,18 @@ public class RepositoryUnitTest {
         subscriber.assertCompleted();
         subscriber.assertNoErrors();
         assert (subscriber.getOnNextEvents().get(0) != null);
+
+    }
+
+    @Test
+    public void autoLoginTest(){
+
+        //1)Get Observable and subscriber
+        AutoLoginSubscriber<AuthToken> subscriber = new AutoLoginSubscriber<>(this.repository);
+        this.repository.autoLogin(subscriber);
+
+        //wait for subscriber to get resource
+        assert(subscriber.getToken() !=null );
 
     }
 }

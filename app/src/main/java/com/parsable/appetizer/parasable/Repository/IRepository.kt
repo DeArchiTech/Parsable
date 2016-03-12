@@ -3,6 +3,7 @@ package com.parsable.appetizer.parasable.Repository
 import com.parsable.appetizer.parasable.Event.LoginEvent
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken
+import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber
 import okhttp3.ResponseBody
 import rx.Observable
 
@@ -32,4 +33,7 @@ interface IRepository{
 
     //Rebuild Retrofit Adapter after settings update
     fun rebuildWebService() : Boolean
+
+    //Login AutoMatically
+    fun autoLogin(subscriber: AutoLoginSubscriber<AuthToken>)
 }
