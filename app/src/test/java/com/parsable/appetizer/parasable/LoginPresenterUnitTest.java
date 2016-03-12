@@ -44,7 +44,7 @@ public class LoginPresenterUnitTest {
     public void setUp(){
 
         this.view = new MockLoginView();
-        this.repository = new RepositoryImpl(new RetrofitHelper().buildWebApiService());
+        this.repository = new RepositoryImpl();
         this.presenter = new LoginPresenterImpl(this.repository);
         this.email = new StringHelper().generateEmail();
         this.loginEmail = new StringHelper().createLoginEmail();

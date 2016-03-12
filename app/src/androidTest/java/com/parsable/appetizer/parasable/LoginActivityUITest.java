@@ -116,7 +116,7 @@ public class LoginActivityUITest {
         //4)Click dialog
         onView(withId(android.R.id.button1)).perform(ViewActions.click());
 
-        //5)Press Logout Button
+        //5)Press Send Data Button
         onView(withId(R.id.push_send_data_view_btn)).perform(ViewActions.click());
 
         //6)Assert on SendDataActivity

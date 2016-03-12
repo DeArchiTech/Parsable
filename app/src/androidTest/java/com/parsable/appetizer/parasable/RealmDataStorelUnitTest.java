@@ -33,7 +33,7 @@ import rx.observers.TestSubscriber;
 @RunWith(AndroidJUnit4.class)
 public class RealmDataStorelUnitTest {
 
-    IDataStore repository;
+    IDataStore dataStore;
     Realm realm;
 
     @Rule
@@ -53,7 +53,7 @@ public class RealmDataStorelUnitTest {
                         .build();
 
                 RealmDataStorelUnitTest.this.realm = Realm.getInstance(realmConfig);
-                RealmDataStorelUnitTest.this.repository = new DataStoreImpl(realmConfig, realm);
+                RealmDataStorelUnitTest.this.dataStore = new DataStoreImpl(realmConfig, realm);
             }
         });
 
@@ -73,7 +73,7 @@ public class RealmDataStorelUnitTest {
                 data.setData("testData");
                 data.setResult(ParsableEnum.callBackResult.ERROR.name());
                 //2)Save Object To Realm
-                Observable<TextData> observable = RealmDataStorelUnitTest.this.repository.createTextData(data);
+                Observable<TextData> observable = RealmDataStorelUnitTest.this.dataStore.createTextData(data);
                 //3)Assert
                 TestSubscriber<TextData> subscriber = new TestSubscriber<TextData>();
                 observable.subscribe(subscriber);
@@ -107,7 +107,7 @@ public class RealmDataStorelUnitTest {
 
                 //3)Retrieve object from realm
                 Observable<RealmResults<TextData>> observable
-                        = RealmDataStorelUnitTest.this.repository.readTextData(ParsableEnum.callBackResult.ERROR);
+                        = RealmDataStorelUnitTest.this.dataStore.readTextData(ParsableEnum.callBackResult.ERROR);
 
                 //4)Assert No Error
                 TestSubscriber<RealmResults<TextData>> subscriber = new TestSubscriber<RealmResults<TextData>>();
@@ -137,7 +137,7 @@ public class RealmDataStorelUnitTest {
                 data.setResult(ParsableEnum.callBackResult.ERROR.name());
 
                 //2)Save Object To Realm
-                Observable<NumData> observable = RealmDataStorelUnitTest.this.repository.createNumData(data);
+                Observable<NumData> observable = RealmDataStorelUnitTest.this.dataStore.createNumData(data);
                 //3)Assert
                 TestSubscriber<NumData> subscriber = new TestSubscriber<NumData>();
                 observable.subscribe(subscriber);
@@ -169,7 +169,7 @@ public class RealmDataStorelUnitTest {
 
                 //3)Retrieve object from realm
                 Observable<RealmResults<NumData>> observable
-                        = RealmDataStorelUnitTest.this.repository.readNumData(ParsableEnum.callBackResult.ERROR);
+                        = RealmDataStorelUnitTest.this.dataStore.readNumData(ParsableEnum.callBackResult.ERROR);
 
                 //4)Assert No Error
                 TestSubscriber<RealmResults<NumData>> subscriber = new TestSubscriber<RealmResults<NumData>>();

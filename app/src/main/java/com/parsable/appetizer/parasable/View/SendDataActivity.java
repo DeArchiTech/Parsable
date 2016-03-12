@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,9 +22,10 @@ import com.parsable.appetizer.parasable.Util.StringHelper;
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 
-public class SendDataActivity extends AppCompatActivity implements ISendDataScreen {
+public class SendDataActivity extends AppCompatActivity implements ISendDataScreen, View.OnClickListener {
 
     ISendDataPresenter presenter;
 
@@ -34,9 +36,24 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
     Button sendDataButton;
 
     @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+        switch(id){
+
+            case R.id.sendDatabutton:{
+                this.sendDataButtonPressed();
+            }
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_data);
+        ButterKnife.bind(this);
+        this.sendDataButton.setOnClickListener(this);
     }
 
     @Override

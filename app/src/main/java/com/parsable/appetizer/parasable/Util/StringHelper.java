@@ -32,4 +32,16 @@ public class StringHelper {
         return false;
 
     }
+
+    public String generateNumber(){
+
+        return String.valueOf(1234);
+
+    }
+
+    public String generateText(){
+
+        return String.valueOf("randomValue");
+
+    }
 }

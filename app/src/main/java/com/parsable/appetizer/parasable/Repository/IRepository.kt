@@ -31,9 +31,6 @@ interface IRepository{
     //Update Auth Token Used for requests
     fun updateAuthToken(token : AuthToken): Boolean
 
-    //Rebuild Retrofit Adapter after settings update
-    fun rebuildWebService() : Boolean
-
     //Login AutoMatically
-    fun autoLogin(subscriber: AutoLoginSubscriber<AuthToken>)
+    fun blockingAutoLogin(subscriber: AutoLoginSubscriber<AuthToken>)
 }

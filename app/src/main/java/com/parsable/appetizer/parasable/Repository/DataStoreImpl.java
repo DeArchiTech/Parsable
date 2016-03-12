@@ -1,5 +1,6 @@
 package com.parsable.appetizer.parasable.Repository;
 
+import com.parsable.appetizer.parasable.Model.User;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
@@ -59,6 +60,7 @@ public class DataStoreImpl implements IDataStore {
         return observable;
 
     }
+
 
     @NotNull
     @Override
@@ -163,5 +165,66 @@ public class DataStoreImpl implements IDataStore {
         return observable;
     }
 
+
+    @NotNull
+    public Observable<User> createUserData(@NotNull final User data) {
+
+        Observable<User> observable = Observable.create(
+
+                new Observable.OnSubscribe<User>() {
+
+                    @Override
+                    public void call(final Subscriber<? super User> subscriber) {
+
+                        realm.beginTransaction();
+                        realm.copyToRealm(data);
+                        realm.commitTransaction();
+
+                        subscriber.onNext(data);
+                        subscriber.onCompleted();
+                    }
+
+                });
+
+        observable.subscribeOn(Schedulers.io());
+        observable.observeOn(AndroidSchedulers.mainThread());
+        observable.subscribe();
+        return observable;
+
+    }
+
+
+    @NotNull
+    public Observable<RealmResults<User>> readUserData() {
+
+        final Observable<RealmResults<User>> observable = Observable.empty();
+
+        RealmAsyncTask transaction = realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+
+                RealmResults<User> dataResult = bgRealm
+                        .where(User.class)
+                        .findAllAsync();
+                observable.just(dataResult);
+
+            }
+        }, new Realm.Transaction.Callback() {
+            @Override
+            public void onSuccess() {
+
+                observable.subscribeOn(Schedulers.io());
+                observable.observeOn(AndroidSchedulers.mainThread());
+                observable.subscribe();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // transaction is automatically rolled-back, do any cleanup here
+            }
+        });
+
+        return observable;
+    }
 
 }

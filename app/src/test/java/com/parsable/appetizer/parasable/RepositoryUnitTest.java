@@ -3,11 +3,10 @@ package com.parsable.appetizer.parasable;
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
-import com.parsable.appetizer.parasable.Network.IWebApiService;
-import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
 import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
+import com.parsable.appetizer.parasable.Util.NumberHelper;
 import com.parsable.appetizer.parasable.Util.StringHelper;
 
 import org.junit.Before;
@@ -17,9 +16,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Davix on 3/10/16.
@@ -34,8 +31,7 @@ public class RepositoryUnitTest {
     @Before
     public void setUp(){
 
-        IWebApiService webApiService = new RetrofitHelper().buildWebApiService();
-        this.repository = new RepositoryImpl(webApiService);
+        this.repository = new RepositoryImpl();
         this.createAccntemail = new StringHelper().generateEmail();
         this.loginEmail = new StringHelper().createLoginEmail();
         this.password = new StringHelper().createLoginPassword();
@@ -120,15 +116,19 @@ public class RepositoryUnitTest {
     @Test
     public void sendNumberActionTest(){
 
-        //1)Get observable and subscriber
-        Observable<ResponseBody> observable = this.repository.sendNumber("hello");
-        TestSubscriber<ResponseBody> subscriber = new TestSubscriber<>();
-        observable.subscribe(subscriber);
+        //1)Auto Login
+        AutoLoginSubscriber<AuthToken> subscriber = new AutoLoginSubscriber<>(this.repository);
+        this.repository.blockingAutoLogin(subscriber);
 
-        //2)Assert subscriber
-        subscriber.assertCompleted();
-        subscriber.assertNoErrors();
-        assert (subscriber.getOnNextEvents().get(0) != null);
+        //2)Get observable and subscriber
+        Observable<ResponseBody> observable = this.repository.sendNumber(new NumberHelper().generateNumberInString());
+        TestSubscriber<ResponseBody> testSubscriber = new TestSubscriber<ResponseBody>();
+        observable.subscribe(testSubscriber);
+
+        //3)Assert subscriber
+        testSubscriber.assertCompleted();
+        testSubscriber.assertNoErrors();
+        assert (testSubscriber.getOnNextEvents().get(0) != null);
 
     }
 
@@ -137,7 +137,7 @@ public class RepositoryUnitTest {
 
         //1)Get Observable and subscriber
         AutoLoginSubscriber<AuthToken> subscriber = new AutoLoginSubscriber<>(this.repository);
-        this.repository.autoLogin(subscriber);
+        this.repository.blockingAutoLogin(subscriber);
 
         //wait for subscriber to get resource
         assert(subscriber.getToken() !=null );

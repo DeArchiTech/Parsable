@@ -2,6 +2,7 @@ package com.parsable.appetizer.parasable.Repository
 
 import com.parsable.appetizer.parasable.Model.NumData
 import com.parsable.appetizer.parasable.Model.TextData
+import com.parsable.appetizer.parasable.Model.User
 import com.parsable.appetizer.parasable.ParsableEnum
 import io.realm.RealmResults
 import rx.Observable
@@ -16,8 +17,11 @@ interface IDataStore {
 
     fun readNumData(result: ParsableEnum.callBackResult): Observable<RealmResults<NumData>>
 
+    fun readUserData(): Observable<RealmResults<User>>
+
     fun createTextData(data : TextData): Observable<TextData>
 
     fun createNumData(data : NumData): Observable<NumData>
 
+    fun createUserData(data : User): Observable<User>
 }

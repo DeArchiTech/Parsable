@@ -1,5 +1,6 @@
 package com.parsable.appetizer.parasable.Subscriber;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
+import com.parsable.appetizer.parasable.Model.User;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 
 import rx.Subscriber;
@@ -27,7 +28,7 @@ public class AuthTokenUpdateSubscriber extends Subscriber<AuthToken>{
 
     @Override
     public void onNext(AuthToken authToken) {
+
         this.repository.updateAuthToken(authToken);
-        this.repository.rebuildWebService();
     }
 }
