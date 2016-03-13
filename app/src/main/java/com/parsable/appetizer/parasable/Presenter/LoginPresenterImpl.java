@@ -56,4 +56,14 @@ public class LoginPresenterImpl implements ILoginPresenter{
 
     }
 
+    @Override
+    public void pushDataAction(@NotNull Subscriber<AuthToken> subscriber) {
+
+        Observable<AuthToken> observable = this.repository.loadLastAuthToken();
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(subscriber);
+
+    }
 }

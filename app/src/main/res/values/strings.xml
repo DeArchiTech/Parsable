@@ -31,4 +31,8 @@
 
     <string name="sendDataButton">Send Data</string>
 
+    <!-- Bundle Keys -->
+
+    <string name="authtoken_bun_key">Auth_Token_Key</string>
+
 </resources>

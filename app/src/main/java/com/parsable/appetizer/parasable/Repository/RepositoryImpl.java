@@ -22,14 +22,18 @@ import rx.Observable;
 public class RepositoryImpl implements IRepository{
 
     IWebApiService apiService;
-    private AuthToken token;
 
     public RepositoryImpl() {
-        this.apiService = new RetrofitHelper().buildWebApiService(token);
+        this.apiService = new RetrofitHelper().buildWebApiService();
     }
 
     public RepositoryImpl(IWebApiService apiService) {
         this.apiService = apiService;
+    }
+
+    public RepositoryImpl(AuthToken token){
+        this.apiService = new RetrofitHelper().buildWebApiService(token);
+
     }
 
     @NotNull
@@ -51,7 +55,7 @@ public class RepositoryImpl implements IRepository{
         pojo.setEmail(event.email);
         pojo.setPassword(event.password);
         return this.apiService.loginAccount(pojo)
-                .flatMap(token -> updateAuthToken(token));
+                .flatMap(token -> saveAuthToken(token));
 
     }
 
@@ -73,13 +77,17 @@ public class RepositoryImpl implements IRepository{
         return this.apiService.sendNumber(new SendNumberApiPojo(text));
     }
 
+    @NotNull
     @Override
-    public Observable<AuthToken> updateAuthToken(@NotNull AuthToken token) {
+    public Observable<AuthToken> saveAuthToken(@NotNull AuthToken token) {
 
+        //Save and rebuild service
         if(token != null){
 
-            this.token = token;
-            this.rebuildWebService(token);
+            IDataStore dataStore = DataStoreImpl.getInstance();
+            if(dataStore !=null) {
+                dataStore.cacheAuthTotken(token);
+            }
 
         }
         return Observable.defer(() -> Observable.just(token));
@@ -88,24 +96,15 @@ public class RepositoryImpl implements IRepository{
 
     @NotNull
     @Override
-    public Observable<AuthToken> saveAuthToken(@NotNull AuthToken token) {
-
-        //Todo Implement, Call Data Store to Save Token
-        return null;
-    }
-
-    @NotNull
-    @Override
     public Observable<AuthToken> loadLastAuthToken() {
 
-        //Todo Implement, Call Data Store to Read Token
-        return null;
-    }
-
-    private boolean rebuildWebService(AuthToken token) {
-
-        this.apiService = new RetrofitHelper().buildWebApiService(token);
-        return true;
+        IDataStore dataStore = DataStoreImpl.getInstance();
+        if(dataStore !=null) {
+            final AuthToken token = dataStore.readCachedAuthToken();
+            return Observable.defer(() -> Observable.just(token));
+        }else{
+            return Observable.defer(() -> Observable.just(null));
+        }
 
     }
 
@@ -116,7 +115,7 @@ public class RepositoryImpl implements IRepository{
         pojo.setEmail(new StringHelper().createLoginEmail());
         pojo.setPassword(new StringHelper().createLoginPassword());
         return this.apiService.loginAccount(pojo)
-                        .flatMap(token -> updateAuthToken(token));
+                        .flatMap(token -> saveAuthToken(token));
 
     }
 

@@ -18,4 +18,6 @@ interface ILoginPresenter{
     fun loginAction(event : LoginEvent, subscriber : Subscriber<AuthToken>)
 
     fun logOutAction(subscriber: Subscriber<ResponseBody>)
+
+    fun pushDataAction(subscriber: Subscriber<AuthToken>)
 }

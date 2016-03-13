@@ -8,6 +8,7 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Presenter.ISendDataPresenter;
 import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
@@ -22,6 +23,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import rx.Observable;
+import rx.observers.TestSubscriber;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
 
@@ -34,13 +39,12 @@ public class SendDataActivityUITest {
     @Rule
     public final ActivityTestRule<SendDataActivity> sendData = new ActivityTestRule<SendDataActivity>(SendDataActivity.class);
 
-    ISendDataPresenter presenter ;
+    ISendDataPresenter presenter;
+    IRepository repository;
     @Before
     public void setUp(){
 
-        //Trigger Repository To Already Be Logged In
-        //This is more of an automated test than a simple UI test
-        IRepository repository = new RepositoryImpl();
+        repository = new RepositoryImpl();
         presenter = new SendDataPresenterImpl(repository);
         sendData.getActivity().setPresnter(presenter);
 

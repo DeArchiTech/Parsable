@@ -27,9 +27,6 @@ interface IRepository{
     //Send Number
     fun sendNumber(text : String): Observable<ResponseBody>
 
-    //Update Auth Token Used for requests
-    fun updateAuthToken(token : AuthToken): Observable<AuthToken>
-
     fun saveAuthToken(token : AuthToken): Observable<AuthToken>
 
     fun loadLastAuthToken(): Observable<AuthToken>

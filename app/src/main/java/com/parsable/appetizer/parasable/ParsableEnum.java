@@ -7,6 +7,6 @@ public class ParsableEnum {
 
     public enum callBackResult { ERROR , SUCCESS}
 
-    public enum actionName { CreateAccount , Login, LogOut, SendNumber, SendText}
+    public enum actionName { CreateAccount , Login, LogOut, SendNumber, SendText , ReadAuthToken }
 
 }

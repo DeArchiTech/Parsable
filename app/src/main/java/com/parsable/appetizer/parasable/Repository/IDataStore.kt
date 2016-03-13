@@ -1,5 +1,6 @@
 package com.parsable.appetizer.parasable.Repository
 
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken
 import com.parsable.appetizer.parasable.Model.NumData
 import com.parsable.appetizer.parasable.Model.TextData
 import com.parsable.appetizer.parasable.Model.User
@@ -28,4 +29,9 @@ interface IDataStore {
     fun createUserData(data : User): Observable<User>
 
     fun deleteUserData(data : User): Observable<User>
+
+    fun cacheAuthTotken(token : AuthToken)
+
+    fun readCachedAuthToken() : AuthToken
+
 }

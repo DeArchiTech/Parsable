@@ -1,5 +1,6 @@
 package com.parsable.appetizer.parasable.Repository;
 
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Model.User;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Model.NumData;
@@ -27,6 +28,18 @@ public class DataStoreImpl implements IDataStore {
 
     RealmConfiguration realmConfig;
     Realm realm;
+    private AuthToken token;
+
+    //Todo Refactor with Dagger, use singleTon for now
+    private  static IDataStore instance;
+
+    public static IDataStore getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(IDataStore instance) {
+        DataStoreImpl.instance = instance;
+    }
 
     public DataStoreImpl(RealmConfiguration realmConfig, Realm realm) {
         this.realmConfig = realmConfig;
@@ -230,5 +243,18 @@ public class DataStoreImpl implements IDataStore {
     @Override
     public Observable<User> deleteUserData(@NotNull User user) {
         return null;
+    }
+
+    @Override
+    public void cacheAuthTotken(@NotNull AuthToken token) {
+
+        this.token = token;
+
+    }
+
+    @NotNull
+    @Override
+    public AuthToken readCachedAuthToken() {
+        return this.token;
     }
 }

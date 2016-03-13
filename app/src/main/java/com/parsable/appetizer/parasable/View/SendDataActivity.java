@@ -9,10 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.parsable.appetizer.parasable.Event.SendDataEvent;
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ISendDataPresenter;
 import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
 import com.parsable.appetizer.parasable.R;
+import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
+import com.parsable.appetizer.parasable.Repository.IDataStore;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
 import com.parsable.appetizer.parasable.Subscriber.SendTextSubscriber;
 
@@ -21,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
 
 public class SendDataActivity extends AppCompatActivity implements ISendDataScreen, View.OnClickListener {
 
@@ -69,7 +74,8 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
 
     public ISendDataPresenter getPresenter() {
         if(presenter == null){
-            presenter = new SendDataPresenterImpl(new RepositoryImpl());
+
+            presenter = new SendDataPresenterImpl(new RepositoryImpl(getAuthToken()));
         }
         return presenter;
     }
@@ -134,6 +140,15 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
                 });
         AlertDialog dialog  = builder.create();
         dialog.show();
+
+    }
+
+    //Controller Code
+    private AuthToken getAuthToken(){
+
+        AuthToken token = new AuthToken();
+        token.AuthToken = getIntent().getExtras().getString(getString(R.string.authtoken_bun_key));
+        return token;
 
     }
 

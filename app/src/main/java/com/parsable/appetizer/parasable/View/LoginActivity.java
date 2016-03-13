@@ -3,6 +3,7 @@ package com.parsable.appetizer.parasable.View;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,10 +41,13 @@ import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
 import com.parsable.appetizer.parasable.R;
+import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
+import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.CreateAccountSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.LogOutSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.LoginSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.PushDataSubscriber;
 import com.parsable.appetizer.parasable.View.Controller.ILoginController;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +57,11 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -157,8 +165,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void sendDataButtonPressed() {
 
+        getPresenter().pushDataAction(new PushDataSubscriber<AuthToken>(this));
+
+    }
+
+    @Override
+    public void pushSendDataActivity(AuthToken token) {
+
         Intent i = new Intent(LoginActivity.this, SendDataActivity.class);
-        startActivity(i);
+        Bundle bundle = new Bundle();
+        bundle.putString(getString(R.string.authtoken_bun_key), token.AuthToken);
+        startActivity(i , bundle);
 
     }
 
@@ -174,9 +191,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         switch (action){
 
-            case CreateAccount:
-                break;
-
             case Login:
                 updateLoggedInStatus(action);
                 updateButtons(this.loggedIn);
@@ -186,6 +200,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 updateLoggedInStatus(action);
                 updateButtons(this.loggedIn);
                 break;
+
+            case CreateAccount:
+            case ReadAuthToken:
+                break;
+
 
         }
 
@@ -274,6 +293,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    private void createDataStoreInstance(){
+
+        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getBaseContext())
+                .name("myrealm.realm")
+                .inMemory()
+                .build();
+
+        Realm realm = Realm.getInstance(realmConfig);
+        DataStoreImpl.setInstance(new DataStoreImpl(realmConfig, realm));
+
+    }
+
     //Generated Android Code
 
 
@@ -303,6 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createDataStoreInstance();
         setContentView(R.layout.activity_login);
         // Set up the login form.
         ButterKnife.bind(this);

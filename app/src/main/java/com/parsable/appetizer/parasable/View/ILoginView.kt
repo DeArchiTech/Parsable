@@ -1,5 +1,6 @@
 package com.parsable.appetizer.parasable.View
 
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken
 import com.parsable.appetizer.parasable.ParsableEnum
 
 /**
@@ -10,5 +11,7 @@ import com.parsable.appetizer.parasable.ParsableEnum
 interface ILoginView{
 
     fun displayActionAndResult(action: ParsableEnum.actionName, result : Boolean)
+
+    fun pushSendDataActivity(token : AuthToken)
 
 }
