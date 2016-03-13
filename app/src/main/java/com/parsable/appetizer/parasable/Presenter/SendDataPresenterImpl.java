@@ -1,11 +1,11 @@
 package com.parsable.appetizer.parasable.Presenter;
 
-import com.parsable.appetizer.parasable.Event.SendNumberEvent;
-import com.parsable.appetizer.parasable.Event.SendTextEvent;
-import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
+import com.parsable.appetizer.parasable.Event.SendDataEvent;
+import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Repository.IRepository;
-import com.parsable.appetizer.parasable.Subscriber.SendNumberSubscriber;
+import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.SendTextSubscriber;
+import com.parsable.appetizer.parasable.Util.StringHelper;
 import com.parsable.appetizer.parasable.View.ISendDataScreen;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,9 +28,23 @@ public class SendDataPresenterImpl implements ISendDataPresenter{
     }
 
     @Override
-    public void sendTextEvent(@NotNull SendTextEvent event, @NotNull Subscriber<ResponseBody> subscriber) {
+    public void sendDataEvent(@NotNull SendDataEvent event, @NotNull ISendDataScreen view) {
 
-        Observable<ResponseBody> observable = this.repository.sendText(event.text);
+        String userInput = event.text;
+
+        Observable<ResponseBody> observable;
+        Subscriber<ResponseBody> subscriber = new SendTextSubscriber<ResponseBody>(view);
+
+        if(new StringHelper().inputIsANumber(userInput)){
+
+            observable = this.repository.sendNumber(userInput);
+
+        }else{
+
+            observable = this.repository.sendText(userInput);
+
+        }
+
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(subscriber);
@@ -38,12 +52,11 @@ public class SendDataPresenterImpl implements ISendDataPresenter{
     }
 
     @Override
-    public void sendNumberEvent(@NotNull SendNumberEvent event, @NotNull Subscriber<ResponseBody> subscriber) {
+    public void autoLoginEvent(@NotNull AutoLoginSubscriber<AuthToken> subcriber) {
 
-        Observable<ResponseBody> observable = this.repository.sendNumber(event.text);
+        Observable<AuthToken> observable = this.repository.autoLogin();
         observable.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(subscriber);
+                .subscribe(subcriber);
     }
-
 }

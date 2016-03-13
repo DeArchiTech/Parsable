@@ -193,7 +193,6 @@ public class DataStoreImpl implements IDataStore {
 
     }
 
-
     @NotNull
     public Observable<RealmResults<User>> readUserData() {
 
@@ -227,4 +226,9 @@ public class DataStoreImpl implements IDataStore {
         return observable;
     }
 
+    @NotNull
+    @Override
+    public Observable<User> deleteUserData(@NotNull User user) {
+        return null;
+    }
 }

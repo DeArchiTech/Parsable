@@ -11,18 +11,20 @@ import io.realm.annotations.PrimaryKey;
  */
 public class User extends RealmObject{
 
-    @PrimaryKey
-    AuthToken token;
+    private String token;
 
-    public User(AuthToken token) {
+    public User() {
+    }
+
+    public User(String token) {
         this.token = token;
     }
 
-    public AuthToken getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(AuthToken token) {
+    public void setToken(String token) {
         this.token = token;
     }
 }

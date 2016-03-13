@@ -8,16 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.parsable.appetizer.parasable.Event.SendNumberEvent;
-import com.parsable.appetizer.parasable.Event.SendTextEvent;
+import com.parsable.appetizer.parasable.Event.SendDataEvent;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ISendDataPresenter;
 import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
 import com.parsable.appetizer.parasable.R;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
-import com.parsable.appetizer.parasable.Subscriber.SendNumberSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.SendTextSubscriber;
-import com.parsable.appetizer.parasable.Util.StringHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -92,15 +89,8 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
 
             //Call Presenter with Event
             String inputString = input.toString();
-            if(new StringHelper().inputIsANumber(inputString)){
-                SendNumberEvent sendNumberEvent = new SendNumberEvent(Double.parseDouble(input.toString()));
-                getPresenter().sendNumberEvent(sendNumberEvent, new SendNumberSubscriber<ResponseBody>(this));
-            }
-            else{
-                SendTextEvent sendTextEvent = new SendTextEvent(input.toString());
-                getPresenter().sendTextEvent(sendTextEvent, new SendTextSubscriber<ResponseBody>(this));
-
-            }
+            SendDataEvent sendDataEvent = new SendDataEvent(input.toString());
+            getPresenter().sendDataEvent(sendDataEvent , this);
 
         }
 
@@ -146,4 +136,5 @@ public class SendDataActivity extends AppCompatActivity implements ISendDataScre
         dialog.show();
 
     }
+
 }

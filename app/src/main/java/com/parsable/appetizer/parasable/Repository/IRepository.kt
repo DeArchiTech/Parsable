@@ -3,7 +3,6 @@ package com.parsable.appetizer.parasable.Repository
 import com.parsable.appetizer.parasable.Event.LoginEvent
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken
-import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber
 import okhttp3.ResponseBody
 import rx.Observable
 
@@ -29,8 +28,11 @@ interface IRepository{
     fun sendNumber(text : String): Observable<ResponseBody>
 
     //Update Auth Token Used for requests
-    fun updateAuthToken(token : AuthToken): Boolean
+    fun updateAuthToken(token : AuthToken): Observable<AuthToken>
 
-    //Login AutoMatically
-    fun blockingAutoLogin(subscriber: AutoLoginSubscriber<AuthToken>)
+    fun saveAuthToken(token : AuthToken): Observable<AuthToken>
+
+    fun loadLastAuthToken(): Observable<AuthToken>
+
+    fun autoLogin():Observable<AuthToken>
 }

@@ -1,23 +1,22 @@
 package com.parsable.appetizer.parasable.Subscriber;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
+import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Repository.IRepository;
+import com.parsable.appetizer.parasable.View.ISendDataScreen;
+
 import rx.Subscriber;
 
 /**
  * Created by Davix on 3/11/16.
  */
 
-public class AutoLoginSubscriber<T> extends Subscriber<AuthToken> {
+public class AutoLoginSubscriber<T> extends Subscriber<T> {
 
-    private AuthToken token;
-    private IRepository repository;
+    private ISendDataScreen sendDataScreen;
+    private ParsableEnum.actionName actionName = ParsableEnum.actionName.Login;
 
-    public AuthToken getToken() {
-        return token;
-    }
-
-    public AutoLoginSubscriber(IRepository repository) {
-        this.repository = repository;
+    public AutoLoginSubscriber(ISendDataScreen sendDataScreen) {
+        this.sendDataScreen = sendDataScreen;
     }
 
     @Override
@@ -28,12 +27,18 @@ public class AutoLoginSubscriber<T> extends Subscriber<AuthToken> {
     @Override
     public void onError(Throwable e) {
 
+        if(this.sendDataScreen!=null){
+            sendDataScreen.displayActionMessage(this.actionName, false);
+        }
+
     }
 
     @Override
-    public void onNext(AuthToken authToken) {
+    public void onNext(T t) {
 
-        this.token = authToken;
-        repository.updateAuthToken(this.token);
+        if(this.sendDataScreen!=null){
+            sendDataScreen.displayActionMessage(this.actionName, true);
+        }
+
     }
 }

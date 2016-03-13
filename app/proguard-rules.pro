@@ -50,3 +50,6 @@
 -keepclasseswithmembernames class * {
     @butterknife.* <methods>;
 }
+
+#Retro Lambda
+-dontwarn java.lang.invoke.*

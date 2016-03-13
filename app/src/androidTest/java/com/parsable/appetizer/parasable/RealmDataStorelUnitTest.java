@@ -185,4 +185,25 @@ public class RealmDataStorelUnitTest {
 
     }
 
+    @Test
+    public void createUserTest(){
+
+        assert (false);
+
+    }
+
+    @Test
+    public void readUserTest(){
+
+        assert (false);
+
+    }
+
+    @Test
+    public void deleteUserTest(){
+
+        assert (false);
+
+    }
+
 }

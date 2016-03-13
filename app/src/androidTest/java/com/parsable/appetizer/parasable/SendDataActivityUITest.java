@@ -13,6 +13,7 @@ import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
 import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
+import com.parsable.appetizer.parasable.Util.NumberHelper;
 import com.parsable.appetizer.parasable.Util.StringHelper;
 import com.parsable.appetizer.parasable.View.SendDataActivity;
 
@@ -32,14 +33,14 @@ public class SendDataActivityUITest {
     @Rule
     public final ActivityTestRule<SendDataActivity> sendData = new ActivityTestRule<SendDataActivity>(SendDataActivity.class);
 
+    ISendDataPresenter presenter ;
     @Before
     public void setUp(){
 
         //Trigger Repository To Already Be Logged In
         //This is more of an automated test than a simple UI test
         IRepository repository = new RepositoryImpl();
-        repository.blockingAutoLogin(new AutoLoginSubscriber<AuthToken>(repository));
-        ISendDataPresenter presenter = new SendDataPresenterImpl(repository);
+        presenter = new SendDataPresenterImpl(repository);
         sendData.getActivity().setPresnter(presenter);
 
     }
@@ -57,41 +58,71 @@ public class SendDataActivityUITest {
     }
 
     @Test
-    public void sendNumberTest() throws InterruptedException{
+    public void autoLoginAndSendTextTest() throws InterruptedException{
 
-        //1)Insert Text into textBox
-        String inputText = new StringHelper().generateNumber();
+        //1)Auto Login Repository
+        presenter.autoLoginEvent(new AutoLoginSubscriber<AuthToken>(sendData.getActivity()));
 
-        onView(withId(R.id.sendDataEditText))
-                .perform(ViewActions.typeText(inputText));
+        //Need some type of auto login mechanism for this to really work
+        //Wait until user is logged in
+        Thread.sleep(2000);
 
-        Espresso.closeSoftKeyboard();
+        onView(withId(android.R.id.button1))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        //2)Click button
-        onView(withId(R.id.sendDatabutton))
-                .perform(ViewActions.click());
-
-        Thread.sleep(3000);
-
-        //4)Click dialog
         onView(withId(android.R.id.button1)).perform(ViewActions.click());
-    }
-
-    @Test
-    public void sendTextTest(){
 
         //1)Insert Text into textBox
         onView(withId(R.id.sendDataEditText))
                 .perform(ViewActions.typeText(new StringHelper().generateText()));
 
+        Espresso.closeSoftKeyboard();
+
+
         //2)Click button
         onView(withId(R.id.sendDatabutton))
                 .perform(ViewActions.click());
 
-        //3)Assert Correct Result
+        //4)Assert Success
+        Thread.sleep(2000);
 
-        //4)Click dialog
+        //5)CLose Dialog box
         onView(withId(android.R.id.button1)).perform(ViewActions.click());
+
+    }
+
+    @Test
+    public void autoLoginAndSendNumberTest() throws InterruptedException{
+
+        //1)Auto Login Repository
+        presenter.autoLoginEvent(new AutoLoginSubscriber<AuthToken>(sendData.getActivity()));
+
+        //Need some type of auto login mechanism for this to really work
+        //Wait until user is logged in
+        Thread.sleep(2000);
+
+        onView(withId(android.R.id.button1))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
+
+        //1)Insert Text into textBox
+        onView(withId(R.id.sendDataEditText))
+                .perform(ViewActions.typeText(new NumberHelper().generateNumberInString()));
+
+        Espresso.closeSoftKeyboard();
+
+
+        //2)Click button
+        onView(withId(R.id.sendDatabutton))
+                .perform(ViewActions.click());
+
+        //4)Assert Success
+        Thread.sleep(2000);
+
+        //5)CLose Dialog box
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
+
     }
 
 }

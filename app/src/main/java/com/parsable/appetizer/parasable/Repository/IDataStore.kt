@@ -17,11 +17,15 @@ interface IDataStore {
 
     fun readNumData(result: ParsableEnum.callBackResult): Observable<RealmResults<NumData>>
 
-    fun readUserData(): Observable<RealmResults<User>>
 
     fun createTextData(data : TextData): Observable<TextData>
 
     fun createNumData(data : NumData): Observable<NumData>
 
+
+    fun readUserData(): Observable<RealmResults<User>>
+
     fun createUserData(data : User): Observable<User>
+
+    fun deleteUserData(data : User): Observable<User>
 }

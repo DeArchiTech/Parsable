@@ -1,14 +1,12 @@
 package com.parsable.appetizer.parasable;
 
-import com.parsable.appetizer.parasable.Event.SendNumberEvent;
-import com.parsable.appetizer.parasable.Event.SendTextEvent;
+import com.parsable.appetizer.parasable.Event.SendDataEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.Presenter.ISendDataPresenter;
 import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
 import com.parsable.appetizer.parasable.Repository.IRepository;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
 import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
-import com.parsable.appetizer.parasable.Subscriber.SendNumberSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.SendTextSubscriber;
 import com.parsable.appetizer.parasable.Util.NumberHelper;
 import com.parsable.appetizer.parasable.Util.StringHelper;
@@ -36,12 +34,11 @@ public class SendDataPresenterTest {
     public void setUp(){
 
         IRepository repository = new RepositoryImpl();
-        repository.blockingAutoLogin(new AutoLoginSubscriber<AuthToken>(repository));
         this.presenter= new SendDataPresenterImpl(repository);
-        screen = new ISendDataScreen() {
+        this.screen = new ISendDataScreen() {
             @Override
             public void displayActionMessage(@NotNull ParsableEnum.actionName action, boolean result) {
-                SendDataPresenterTest.this.viewCalled = true;
+
             }
 
             @Override
@@ -54,23 +51,31 @@ public class SendDataPresenterTest {
 
             }
         };
+        this.presenter.autoLoginEvent(new AutoLoginSubscriber<>(this.screen));
     }
 
     @Test
     public void sendNumberTest() throws InterruptedException{
 
-        Subscriber<ResponseBody> subscriber = new SendNumberSubscriber<>(screen);
-        SendNumberEvent event = new SendNumberEvent(new NumberHelper().generateNumber());
-        this.presenter.sendNumberEvent(event, subscriber);
+        SendDataEvent event = new SendDataEvent(new NumberHelper().generateNumberInString());
+        this.presenter.sendDataEvent(event , this.screen);
 
     }
 
     @Test
     public void sendTextTest(){
 
-        Subscriber<ResponseBody> subscriber = new SendTextSubscriber<>(screen);
-        SendTextEvent event = new SendTextEvent( new StringHelper().generateText());
-        this.presenter.sendTextEvent(event, subscriber);
+        SendDataEvent event = new SendDataEvent(new StringHelper().generateText());
+        this.presenter.sendDataEvent(event , this.screen);
+
+    }
+
+    @Test
+    public void autoLoginTest(){
+
+        AutoLoginSubscriber<AuthToken> subscriber
+                = new AutoLoginSubscriber<AuthToken>(this.screen);
+        this.presenter.autoLoginEvent(subscriber);
 
     }
 

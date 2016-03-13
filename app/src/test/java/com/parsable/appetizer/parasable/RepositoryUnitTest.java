@@ -102,7 +102,10 @@ public class RepositoryUnitTest {
     @Test
     public void sendTextActionTest(){
 
-        //1)Get observable and subscriber
+        //1)Auto Login
+        this.repository.autoLogin().toBlocking();
+
+        //2)Get observable and subscriber
         Observable<ResponseBody> observable = this.repository.sendText("hello");
         TestSubscriber<ResponseBody> subscriber = new TestSubscriber<>();
         observable.subscribe(subscriber);
@@ -117,8 +120,7 @@ public class RepositoryUnitTest {
     public void sendNumberActionTest(){
 
         //1)Auto Login
-        AutoLoginSubscriber<AuthToken> subscriber = new AutoLoginSubscriber<>(this.repository);
-        this.repository.blockingAutoLogin(subscriber);
+        this.repository.autoLogin().toBlocking();
 
         //2)Get observable and subscriber
         Observable<ResponseBody> observable = this.repository.sendNumber(new NumberHelper().generateNumberInString());
@@ -135,12 +137,17 @@ public class RepositoryUnitTest {
     @Test
     public void autoLoginTest(){
 
-        //1)Get Observable and subscriber
-        AutoLoginSubscriber<AuthToken> subscriber = new AutoLoginSubscriber<>(this.repository);
-        this.repository.blockingAutoLogin(subscriber);
+        //1)Auto Login
+        Observable<AuthToken> observable = this.repository.autoLogin();
 
-        //wait for subscriber to get resource
-        assert(subscriber.getToken() !=null );
+        //2)Get Subscriber
+        TestSubscriber<AuthToken> testSubscriber = new TestSubscriber<AuthToken>();
+        observable.subscribe(testSubscriber);
+
+        //3)Assert subscriber
+        testSubscriber.assertCompleted();
+        testSubscriber.assertNoErrors();
+        assert (testSubscriber.getOnNextEvents().get(0) != null);
 
     }
 }
