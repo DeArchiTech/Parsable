@@ -78,8 +78,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
+                android:text="@string/action_login_in"
                 android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/logout_btn"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_log_out"
+                android:textStyle="bold"
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/push_send_data_view_btn"

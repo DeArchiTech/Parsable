@@ -63,11 +63,14 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> , ILoginView, ILoginController, OnClickListener {
 
     private ILoginPresenter presenter;
+
     @Bind(R.id.email) TextView emailTextView;
     @Bind(R.id.password) TextView passwordTextView;
     @Bind(R.id.login_btn) Button loginButton;
+    @Bind(R.id.logout_btn) Button loginOutButton;
     @Bind(R.id.create_accnt_btn) Button createAccountViewButton;
     @Bind(R.id.push_send_data_view_btn) Button pushSendDataViewButton;
+
     private boolean loggedIn = false;
 
     @Override
@@ -80,6 +83,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             case R.id.login_btn:
 
                 this.loginButtonPressed();
+                break;
+
+            case R.id.logout_btn:
+
+                this.logoutButtonPressed();
                 break;
 
             case R.id.create_accnt_btn:
@@ -157,9 +165,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void displayActionAndResult(ParsableEnum.actionName action, boolean result) {
 
+        updateState(action);
+        displayToView(action ,result);
+
+    }
+
+    private void updateState(ParsableEnum.actionName action){
+
+        switch (action){
+
+            case CreateAccount:
+                break;
+
+            case Login:
+                updateLoggedInStatus(action);
+                updateButtons(this.loggedIn);
+                break;
+
+            case LogOut:
+                updateLoggedInStatus(action);
+                updateButtons(this.loggedIn);
+                break;
+
+        }
+
+    }
+
+    private void displayToView(ParsableEnum.actionName action, boolean result){
+
         if(result){
 
-            updateLoggedInStatus();
             displaySuccessMessage(action.name());
 
         }else{
@@ -203,22 +238,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void updateButtons(boolean result){
 
         if(result){
-            this.loginButton.setText(getString(R.string.logOutButton));
+
+            this.loginButton.setVisibility(View.GONE);
+            this.loginOutButton.setVisibility(View.VISIBLE);
             this.pushSendDataViewButton.setVisibility(View.VISIBLE);
+
         }else{
-            this.loginButton.setText(getString(R.string.logInButton));
+
+            this.loginButton.setVisibility(View.VISIBLE);
+            this.loginOutButton.setVisibility(View.GONE);
             this.pushSendDataViewButton.setVisibility(View.INVISIBLE);
 
         }
 
     }
 
-    private void updateLoggedInStatus(){
+    private void updateLoggedInStatus(ParsableEnum.actionName action) {
 
-        this.loggedIn = !this.loggedIn;
+        if (action == ParsableEnum.actionName.Login)
+            this.loggedIn = true;
+        else if (action == ParsableEnum.actionName.LogOut)
+            this.loggedIn = false;
+
 
     }
-
 
     private boolean inputIsValid(){
 
@@ -290,6 +333,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
         this.loginButton.setOnClickListener(this);
         this.createAccountViewButton.setOnClickListener(this);
+        this.pushSendDataViewButton.setOnClickListener(this);
+        this.loginOutButton.setOnClickListener(this);
     }
 
     private void populateAutoComplete() {

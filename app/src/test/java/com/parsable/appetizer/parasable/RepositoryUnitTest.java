@@ -16,6 +16,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.observers.TestObserver;
 import rx.observers.TestSubscriber;
 
 /**
@@ -120,7 +121,12 @@ public class RepositoryUnitTest {
     public void sendNumberActionTest(){
 
         //1)Auto Login
-        this.repository.autoLogin().toBlocking();
+        Observable<AuthToken> loginObservable = this.repository.autoLogin();
+        TestSubscriber<AuthToken> subscriber = new TestSubscriber<AuthToken>();
+
+        subscriber.assertNoErrors();
+        subscriber.assertCompleted();
+        assert (subscriber.getOnNextEvents().get(0) != null);
 
         //2)Get observable and subscriber
         Observable<ResponseBody> observable = this.repository.sendNumber(new NumberHelper().generateNumberInString());

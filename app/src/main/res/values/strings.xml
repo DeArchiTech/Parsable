@@ -4,7 +4,8 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Log In</string>
+    <string name="action_login_in">Log In</string>
+    <string name="action_log_out">Log Out</string>
     <string name="action_push_send_data_view">Send Data</string>
     <string name="action_push_create_acct_view">Create Account</string>
     <string name="action_sign_in_short">Sign in</string>

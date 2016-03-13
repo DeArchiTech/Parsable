@@ -1,5 +1,6 @@
 package com.parsable.appetizer.parasable;
 
+import android.app.Instrumentation;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
@@ -117,8 +118,14 @@ public class SendDataActivityUITest {
         onView(withId(R.id.sendDatabutton))
                 .perform(ViewActions.click());
 
-        //4)Assert Success
+        //4)Wait for Success
         Thread.sleep(2000);
+
+        //2)Assert there is an input box Success String on it
+        String success = sendData.getActivity().getResources().getString(R.string.displaySuccessButton);
+
+        onView(withText(success))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         //5)CLose Dialog box
         onView(withId(android.R.id.button1)).perform(ViewActions.click());

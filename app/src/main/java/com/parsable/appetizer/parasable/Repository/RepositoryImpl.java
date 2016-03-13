@@ -10,7 +10,6 @@ import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendNumberApiPojo;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.SendTextApiPojo;
 import com.parsable.appetizer.parasable.Network.IWebApiService;
 import com.parsable.appetizer.parasable.Network.RetrofitHelper;
-import com.parsable.appetizer.parasable.Subscriber.AuthTokenUpdateSubscriber;
 import com.parsable.appetizer.parasable.Util.StringHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,10 +50,8 @@ public class RepositoryImpl implements IRepository{
         LoginApiPojo pojo = new LoginApiPojo();
         pojo.setEmail(event.email);
         pojo.setPassword(event.password);
-        Observable<AuthToken> observable = this.apiService.loginAccount(pojo);
-        observable.flatMap( token -> updateAuthToken(token));
-        observable.subscribe(new AuthTokenUpdateSubscriber(this));
-        return observable;
+        return this.apiService.loginAccount(pojo)
+                .flatMap(token -> updateAuthToken(token));
 
     }
 
@@ -82,10 +79,10 @@ public class RepositoryImpl implements IRepository{
         if(token != null){
 
             this.token = token;
-            this.rebuildWebService();
+            this.rebuildWebService(token);
 
         }
-        return Observable.defer(() -> Observable.just(this.token));
+        return Observable.defer(() -> Observable.just(token));
 
     }
 
@@ -105,9 +102,9 @@ public class RepositoryImpl implements IRepository{
         return null;
     }
 
-    private boolean rebuildWebService() {
+    private boolean rebuildWebService(AuthToken token) {
 
-        this.apiService = new RetrofitHelper().buildWebApiService(this.token);
+        this.apiService = new RetrofitHelper().buildWebApiService(token);
         return true;
 
     }
