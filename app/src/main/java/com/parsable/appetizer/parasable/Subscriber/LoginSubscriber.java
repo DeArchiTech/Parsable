@@ -2,8 +2,6 @@ package com.parsable.appetizer.parasable.Subscriber;
 
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
 import com.parsable.appetizer.parasable.ParsableEnum;
-import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
-import com.parsable.appetizer.parasable.Repository.IDataStore;
 import com.parsable.appetizer.parasable.View.ILoginView;
 import rx.Subscriber;
 

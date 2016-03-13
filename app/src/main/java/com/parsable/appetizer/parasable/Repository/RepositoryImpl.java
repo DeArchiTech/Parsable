@@ -90,6 +90,7 @@ public class RepositoryImpl implements IRepository{
             }
 
         }
+        this.rebuildWebService(token);
         return Observable.defer(() -> Observable.just(token));
 
     }
@@ -116,6 +117,12 @@ public class RepositoryImpl implements IRepository{
         pojo.setPassword(new StringHelper().createLoginPassword());
         return this.apiService.loginAccount(pojo)
                         .flatMap(token -> saveAuthToken(token));
+
+    }
+
+    public void rebuildWebService(AuthToken token){
+
+        this.apiService = new RetrofitHelper().buildWebApiService(token);
 
     }
 

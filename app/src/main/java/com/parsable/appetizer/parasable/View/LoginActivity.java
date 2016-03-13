@@ -173,9 +173,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void pushSendDataActivity(AuthToken token) {
 
         Intent i = new Intent(LoginActivity.this, SendDataActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.authtoken_bun_key), token.AuthToken);
-        startActivity(i , bundle);
+        i.putExtra(getString(R.string.authtoken_bun_key), token.AuthToken);
+        startActivity(i);
 
     }
 

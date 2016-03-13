@@ -3,6 +3,7 @@ package com.parsable.appetizer.parasable.Repository
 import com.parsable.appetizer.parasable.Event.LoginEvent
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken
+import com.parsable.appetizer.parasable.Network.IWebApiService
 import okhttp3.ResponseBody
 import rx.Observable
 

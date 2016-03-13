@@ -42,10 +42,20 @@ public class SendDataAutomateTest {
     @Test
     public void createAccountAndSendNumberTest() throws InterruptedException{
 
+        generateAccountInfo();
         createAccount();
         login();
         pushSendDataView();
         sendDataTest(new NumberHelper().generateNumberInString());
+
+    }
+
+    @Test
+    public void loginAndLogOutTest() throws InterruptedException{
+
+        inputAccountInfo();
+        login();
+        logout();
 
     }
 
@@ -91,6 +101,19 @@ public class SendDataAutomateTest {
 
         //3)Press Login Button
         onView(withId(R.id.login_btn)).perform(ViewActions.click());
+
+        //3.5)Wait
+        Thread.sleep(1000);
+
+        //4)Click dialog
+        onView(withId(android.R.id.button1)).perform(ViewActions.click());
+
+    }
+
+    private void logout() throws InterruptedException{
+
+        //3)Press Logout Button
+        onView(withId(R.id.logout_btn)).perform(ViewActions.click());
 
         //3.5)Wait
         Thread.sleep(1000);
