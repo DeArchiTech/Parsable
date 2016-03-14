@@ -84,7 +84,7 @@ public class RepositoryImpl implements IRepository{
         //Save and rebuild service
         if(token != null){
 
-            IDataStore dataStore = DataStoreImpl.getInstance();
+            IUserData dataStore = CacheData.getInstance();
             if(dataStore !=null) {
                 dataStore.cacheAuthTotken(token);
             }
@@ -99,7 +99,7 @@ public class RepositoryImpl implements IRepository{
     @Override
     public Observable<AuthToken> loadLastAuthToken() {
 
-        IDataStore dataStore = DataStoreImpl.getInstance();
+        IUserData dataStore = CacheData.getInstance();
         if(dataStore !=null) {
             final AuthToken token = dataStore.readCachedAuthToken();
             return Observable.defer(() -> Observable.just(token));

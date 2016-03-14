@@ -14,18 +14,12 @@ import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ISendDataPresenter;
 import com.parsable.appetizer.parasable.Presenter.SendDataPresenterImpl;
 import com.parsable.appetizer.parasable.R;
-import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
-import com.parsable.appetizer.parasable.Repository.IDataStore;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
-import com.parsable.appetizer.parasable.Subscriber.SendTextSubscriber;
 
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
 
 public class SendDataActivity extends AppCompatActivity implements ISendDataScreen, View.OnClickListener {
 

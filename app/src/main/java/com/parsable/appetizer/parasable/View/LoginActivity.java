@@ -3,7 +3,6 @@ package com.parsable.appetizer.parasable.View;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,14 +35,11 @@ import android.widget.TextView;
 import com.parsable.appetizer.parasable.Event.CreateAccountEvent;
 import com.parsable.appetizer.parasable.Event.LoginEvent;
 import com.parsable.appetizer.parasable.Model.ApiJsonPojo.AuthToken;
-import com.parsable.appetizer.parasable.Network.RetrofitHelper;
 import com.parsable.appetizer.parasable.ParsableEnum;
 import com.parsable.appetizer.parasable.Presenter.ILoginPresenter;
 import com.parsable.appetizer.parasable.Presenter.LoginPresenterImpl;
 import com.parsable.appetizer.parasable.R;
-import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
 import com.parsable.appetizer.parasable.Repository.RepositoryImpl;
-import com.parsable.appetizer.parasable.Subscriber.AutoLoginSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.CreateAccountSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.LogOutSubscriber;
 import com.parsable.appetizer.parasable.Subscriber.LoginSubscriber;
@@ -57,11 +53,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -292,18 +284,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
-    private void createDataStoreInstance(){
-
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(getBaseContext())
-                .name("myrealm.realm")
-                .inMemory()
-                .build();
-
-        Realm realm = Realm.getInstance(realmConfig);
-        DataStoreImpl.setInstance(new DataStoreImpl(realmConfig, realm));
-
-    }
-
     //Generated Android Code
 
 
@@ -333,7 +313,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        createDataStoreInstance();
         setContentView(R.layout.activity_login);
         // Set up the login form.
         ButterKnife.bind(this);

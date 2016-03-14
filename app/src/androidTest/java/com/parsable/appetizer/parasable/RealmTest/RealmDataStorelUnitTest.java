@@ -8,8 +8,8 @@ import android.support.test.runner.AndroidJUnit4;
 import com.parsable.appetizer.parasable.Model.NumData;
 import com.parsable.appetizer.parasable.Model.TextData;
 import com.parsable.appetizer.parasable.ParsableEnum;
-import com.parsable.appetizer.parasable.Repository.IDataStore;
-import com.parsable.appetizer.parasable.Repository.DataStoreImpl;
+import com.parsable.appetizer.parasable.Repository.IUserData;
+import com.parsable.appetizer.parasable.Repository.CacheData;
 import com.parsable.appetizer.parasable.View.LoginActivity;
 
 import org.junit.Before;
@@ -34,7 +34,7 @@ import rx.observers.TestSubscriber;
 @RunWith(AndroidJUnit4.class)
 public class RealmDataStorelUnitTest {
 
-    IDataStore dataStore;
+    IUserData dataStore;
     Realm realm;
 
     @Rule
@@ -54,7 +54,7 @@ public class RealmDataStorelUnitTest {
                         .build();
 
                 RealmDataStorelUnitTest.this.realm = Realm.getInstance(realmConfig);
-                RealmDataStorelUnitTest.this.dataStore = new DataStoreImpl(realmConfig, realm);
+                RealmDataStorelUnitTest.this.dataStore = new CacheData(realmConfig, realm);
             }
         });
 
